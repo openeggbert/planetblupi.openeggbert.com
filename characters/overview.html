@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Character Overview — Planet Blupi Docs</title>
+<style>
+
+:root {
+    --bg:        #0d1117;
+    --sidebar-bg:#161b22;
+    --border:    #30363d;
+    --text:      #c9d1d9;
+    --heading:   #e6edf3;
+    --link:      #58a6ff;
+    --link-hover:#79c0ff;
+    --code-bg:   #161b22;
+    --code-text: #f0f6fc;
+    --pre-bg:    #161b22;
+    --table-hd:  #21262d;
+    --table-alt: #161b22;
+    --accent:    #f78166;
+    --sidebar-w: 280px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ── Sidebar ─────────────────────────────────────────── */
+#sidebar {
+    width: var(--sidebar-w);
+    min-width: var(--sidebar-w);
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 0 0 2rem 0;
+    flex-shrink: 0;
+}
+
+#sidebar .logo {
+    display: block;
+    padding: 1rem 1rem 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--heading);
+    letter-spacing: 0.02em;
+}
+#sidebar .logo span { color: var(--accent); }
+
+#sidebar nav { padding: 0.5rem 0; }
+
+#sidebar .section-title {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6e7681;
+    padding: 0.85rem 1rem 0.2rem 1rem;
+}
+
+#sidebar a.nav-link {
+    display: block;
+    padding: 0.28rem 1rem 0.28rem 1.3rem;
+    font-size: 0.83rem;
+    color: #8b949e;
+    text-decoration: none;
+    border-left: 2px solid transparent;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+#sidebar a.nav-link:hover {
+    color: var(--link-hover);
+    background: rgba(88,166,255,0.06);
+    border-left-color: var(--link);
+}
+#sidebar a.nav-link.active {
+    color: var(--link);
+    border-left-color: var(--accent);
+    background: rgba(247,129,102,0.08);
+    font-weight: 600;
+}
+#sidebar a.nav-link.top-link {
+    font-size: 0.85rem;
+    color: #adbac7;
+    padding-left: 1rem;
+    font-weight: 600;
+}
+
+/* ── Main content ────────────────────────────────────── */
+#main {
+    flex: 1;
+    min-width: 0;
+    padding: 2.5rem 3rem 4rem 3rem;
+    max-width: 960px;
+}
+
+/* ── Breadcrumb ──────────────────────────────────────── */
+.breadcrumb {
+    font-size: 0.78rem;
+    color: #6e7681;
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    align-items: center;
+}
+.breadcrumb a { color: var(--link); text-decoration: none; }
+.breadcrumb a:hover { text-decoration: underline; }
+.breadcrumb .sep { color: #6e7681; }
+
+/* ── Typography ──────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--heading);
+    font-weight: 600;
+    line-height: 1.3;
+    margin-top: 1.8em;
+    margin-bottom: 0.6em;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.3em;
+}
+h1 { font-size: 1.9rem; margin-top: 0; }
+h2 { font-size: 1.4rem; }
+h3 { font-size: 1.15rem; border-bottom: none; }
+h4 { font-size: 1rem; border-bottom: none; color: var(--text); }
+
+p { margin: 0.75em 0; }
+
+a { color: var(--link); text-decoration: none; }
+a:hover { text-decoration: underline; color: var(--link-hover); }
+
+ul, ol { padding-left: 1.5em; margin: 0.5em 0; }
+li { margin: 0.25em 0; }
+
+/* ── Code ────────────────────────────────────────────── */
+code {
+    background: var(--code-bg);
+    color: var(--code-text);
+    padding: 0.15em 0.45em;
+    border-radius: 4px;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 0.85em;
+    border: 1px solid var(--border);
+}
+
+pre {
+    background: var(--pre-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1em 1.2em;
+    overflow-x: auto;
+    margin: 1em 0;
+    line-height: 1.55;
+}
+pre code {
+    background: transparent;
+    border: none;
+    padding: 0;
+    font-size: 0.83rem;
+    color: #e6edf3;
+}
+
+/* ── Tables ──────────────────────────────────────────── */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+    font-size: 0.88rem;
+    overflow-x: auto;
+    display: block;
+}
+thead tr { background: var(--table-hd); }
+th {
+    border: 1px solid var(--border);
+    padding: 0.5em 0.85em;
+    text-align: left;
+    color: var(--heading);
+    font-weight: 600;
+    white-space: nowrap;
+}
+td {
+    border: 1px solid var(--border);
+    padding: 0.45em 0.85em;
+    vertical-align: top;
+}
+tbody tr:nth-child(even) { background: var(--table-alt); }
+tbody tr:hover { background: #1c2128; }
+
+/* ── Blockquote ──────────────────────────────────────── */
+blockquote {
+    border-left: 3px solid var(--accent);
+    margin: 1em 0;
+    padding: 0.5em 1em;
+    background: rgba(247,129,102,0.07);
+    border-radius: 0 4px 4px 0;
+    color: #adbac7;
+    font-style: italic;
+}
+
+/* ── HR ──────────────────────────────────────────────── */
+hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2em 0;
+}
+
+/* ── Responsive ──────────────────────────────────────── */
+@media (max-width: 768px) {
+    body { flex-direction: column; }
+    #sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+    #main { padding: 1.5rem 1.2rem 3rem 1.2rem; }
+}
+
+/* ── Scroll ──────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: #30363d; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #484f58; }
+
+</style>
+</head>
+<body>
+<aside id="sidebar">
+  <a class="logo" href="../index.html">
+    <span>&#9679;</span> Planet Blupi Docs
+  </a>
+  <nav>
+<a class="nav-link top-link" href="../index.html">&#8962; Index</a>
+<span class="section-title">Overview</span>
+<a class="nav-link " href="../overview.html">Overview</a>
+<a class="nav-link " href="../history.html">History & Speedy Blupi</a>
+<span class="section-title">Architecture</span>
+<a class="nav-link " href="../architecture/overview.html">System Architecture</a>
+<a class="nav-link " href="../architecture/source-files.html">Source Files Reference</a>
+<span class="section-title">Engine Internals</span>
+<a class="nav-link " href="../engine/data-structures.html">Data Structures</a>
+<a class="nav-link " href="../engine/game-phases.html">Game Phases</a>
+<a class="nav-link " href="../engine/rendering.html">Rendering</a>
+<a class="nav-link " href="../engine/pathfinding.html">Pathfinding (A*)</a>
+<a class="nav-link " href="../engine/fog-of-war.html">Fog of War</a>
+<a class="nav-link " href="../engine/minimap.html">Minimap</a>
+<a class="nav-link " href="../engine/demo.html">Demo Recording</a>
+<a class="nav-link " href="../engine/undo.html">Undo System</a>
+<span class="section-title">World (Map)</span>
+<a class="nav-link " href="../world/file-format.html">World File Format</a>
+<a class="nav-link " href="../world/grid.html">World Grid</a>
+<a class="nav-link " href="../world/terrain.html">Terrain & Auto-tiling</a>
+<a class="nav-link " href="../world/objects.html">Object Layer</a>
+<span class="section-title">Characters</span>
+<a class="nav-link active" href="overview.html">Character Overview</a>
+<a class="nav-link " href="blupi.html">Player (Blupi)</a>
+<a class="nav-link " href="enemies.html">Enemies</a>
+<a class="nav-link " href="vehicles.html">Vehicles</a>
+<a class="nav-link " href="actions.html">ACTION_* Codes</a>
+<a class="nav-link " href="goals.html">GOAL_* Interpreter</a>
+<span class="section-title">Gameplay</span>
+<a class="nav-link " href="../gameplay/win-conditions.html">Win Conditions</a>
+<a class="nav-link " href="../gameplay/toolbar.html">Toolbar Buttons</a>
+<a class="nav-link " href="../gameplay/directions.html">Directions</a>
+<a class="nav-link " href="../gameplay/skill-levels.html">Skill Levels</a>
+<a class="nav-link " href="../gameplay/regions.html">Regions / Themes</a>
+<a class="nav-link " href="../gameplay/cheat-codes.html">Cheat Codes</a>
+<span class="section-title">Assets</span>
+<a class="nav-link " href="../assets/images.html">Image Assets</a>
+<a class="nav-link " href="../assets/sounds.html">Sound Effects</a>
+<a class="nav-link " href="../assets/music.html">Music Tracks</a>
+<a class="nav-link " href="../assets/data-files.html">Data Files</a>
+<a class="nav-link " href="../assets/movies.html">Movies</a>
+<span class="section-title">User Interface</span>
+<a class="nav-link " href="../ui/messages.html">Windows Messages</a>
+<a class="nav-link " href="../ui/cursor-sprites.html">Cursor Sprites</a>
+<a class="nav-link " href="../ui/statistics.html">Statistics Panel</a>
+<a class="nav-link " href="../ui/error-codes.html">Error Codes</a>
+<span class="section-title">Platforms</span>
+<a class="nav-link " href="../platform/build.html">Build System</a>
+<a class="nav-link " href="../platform/config.html">Configuration</a>
+<a class="nav-link " href="../platform/localisation.html">Localisation</a>
+<a class="nav-link " href="../platform/web.html">Web / Emscripten</a>
+<span class="section-title">Speedy Blupi Reference</span>
+<a class="nav-link " href="../speedy-blupi/overview.html">Relation to Speedy Blupi</a>
+<a class="nav-link " href="../speedy-blupi/actions-h.html">actions.h Reference</a>
+</nav>
+</aside>
+<main id="main">
+  <div class="breadcrumb"><a href="../index.html">Home</a> <span class="sep">/</span> <span>Characters</span> <span class="sep">/</span> <span>Overview</span></div>
+  <h1 id="character-overview">Character Overview</h1>
+<h2 id="storage">Storage</h2>
+<p>All characters are stored as <code>Blupi</code> structs in <code>CDecor::m_blupi[]</code> (100 slots).
+The <code>perso</code> field identifies the character type.</p>
+<pre><code class="language-cpp">// Create a character:
+int CDecor::BlupiCreate(POINT cel, int action, int direct, int perso, int energy);
+
+// Delete a character at a cell:
+BOOL CDecor::BlupiDelete(POINT cel, int perso=-1);
+
+// Delete a character by rank:
+void CDecor::BlupiDelete(int rank);
+
+// Kill a character (plays death animation):
+void CDecor::BlupiKill(int exRank, POINT cel, int type);
+</code></pre>
+<hr />
+<h2 id="all-character-types">All Character Types</h2>
+<table>
+<thead>
+<tr>
+<th><code>perso</code></th>
+<th>Internal name</th>
+<th>French name</th>
+<th>Controlled by</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>Blupi</td>
+<td>Blupi</td>
+<td>Player</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Spider</td>
+<td>Araignée</td>
+<td>AI enemy</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Virus</td>
+<td>Virus</td>
+<td>AI enemy</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Tracks</td>
+<td>Tracks</td>
+<td>AI enemy</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Robot</td>
+<td>Robot</td>
+<td>AI enemy</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Bomb</td>
+<td>Bombe</td>
+<td>AI (autonomous)</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Mine detonator</td>
+<td>Détonateur</td>
+<td>Passive trigger</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Electro tower</td>
+<td>Électro</td>
+<td>AI enemy (stationary)</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Disciple</td>
+<td>Disciple / Robot2</td>
+<td>Player (helper)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="character-lifecycle">Character Lifecycle</h2>
+<pre><code>BlupiCreate()
+    │
+    ├─ Sets bExist = TRUE
+    ├─ Sets cel, action, aDirect, perso, energy
+    ├─ Calls BlupiInitAction() to set initial sprite
+    │
+    └─ Character enters the game loop
+
+Each tick:
+    BlupiNextAction(rank)   ← advances animation frame
+    BlupiNextGoal(rank)     ← advances GOAL_* sequence
+    BlupiPushFog(rank)      ← updates fog of war
+
+Death:
+    BlupiKill() → plays death animation → BlupiDelete()
+</code></pre>
+<hr />
+<h2 id="selection-system">Selection System</h2>
+<p>Players can select one or multiple Blupi characters:</p>
+<pre><code class="language-cpp">void CDecor::BlupiHiliDown(POINT pos, BOOL bAdd);  // mouse press — start selection
+void CDecor::BlupiHiliMove(POINT pos, BOOL bAdd);  // mouse drag — extend selection rect
+void CDecor::BlupiHiliUp(POINT pos, BOOL bAdd);    // mouse release — finalise selection
+void CDecor::BlupiDeselect();                       // deselect all
+void CDecor::BlupiDeselect(int rank);               // deselect one character
+void CDecor::BlupiDrawHili();                       // draw selection highlights
+</code></pre>
+<p><code>m_bHiliRect</code> is TRUE when the player is dragging a selection rectangle.
+<code>m_nbBlupiHili</code> holds the count of currently selected Blupi.
+<code>m_rankBlupiHili</code> holds the rank of the single selected Blupi (-1 if multiple).</p>
+<hr />
+<h2 id="energy-system">Energy System</h2>
+<p>Each Blupi has <code>energy</code> (0..MAXENERGY=4000).</p>
+<ul>
+<li>Energy drains over time and during actions</li>
+<li>When energy reaches 0, Blupi must eat or drink (BUTTON_MANGE / BUTTON_BOIT)</li>
+<li>If energy reaches 0 with no food available, Blupi eventually dies</li>
+<li>Tired Blupi use <code>ACTION_STOPf</code> / <code>ACTION_MARCHEf</code> (tired variants)</li>
+<li>On the <strong>Easy</strong> skill level, energy drains slower; <strong>Hard</strong> drains faster</li>
+</ul>
+<hr />
+<h2 id="arrow-indicator">Arrow Indicator</h2>
+<p><code>m_celArrow</code> / <code>Blupi.bArrow</code> — a directional arrow drawn above a Blupi.
+Used to indicate that a Blupi has a waypoint queued.</p>
+<hr />
+<h2 id="busy-click-timing">Busy / Click Timing</h2>
+<pre><code class="language-cpp">char busyCount;   // increments each tick while character is busy
+char busyDelay;   // delay before accepting new commands
+char clicCount;   // tracks double-click count
+char clicDelay;   // delay window for double-click detection
+</code></pre>
+<p>These throttle how quickly a character can receive new commands,
+preventing accidental double-commands from rapid clicks.</p>
+<hr />
+<h2 id="command-queue-listbutton">Command Queue (listButton)</h2>
+<p>Each character has a FIFO queue of up to <code>MAXLIST=10</code> commands:</p>
+<pre><code class="language-cpp">short listButton[MAXLIST];   // BUTTON_* command types
+POINT listCel[MAXLIST];      // target cells
+short listParam[MAXLIST];    // extra parameters
+
+// Queue management:
+BOOL  CDecor::ListPut(int rank, int button, POINT cel, POINT cMem);  // enqueue
+void  CDecor::ListRemove(int rank);                                    // dequeue head
+void  CDecor::ListFlush(int rank);                                     // clear all
+int   CDecor::ListSearch(int rank, int button, POINT cel, ...);       // search queue
+</code></pre>
+<hr />
+<h2 id="carried-object">Carried Object</h2>
+<p>A Blupi can carry one object at a time:</p>
+<pre><code class="language-cpp">short takeChannel;  // channel of carried object (CHOBJECT etc.), -1 = nothing
+short takeIcon;     // icon of carried object
+</code></pre>
+<p>The carried object is rendered above the Blupi's head using the same sprite
+as its in-world equivalent.</p>
+</main>
+<script>
+// Highlight active nav link also by current URL
+(function(){
+  var links = document.querySelectorAll('#sidebar a.nav-link');
+  var cur = window.location.pathname.split('/').pop() || 'index.html';
+  links.forEach(function(a){
+    if(a.getAttribute('href').split('/').pop() === cur) a.classList.add('active');
+  });
+})();
+</script>
+</body>
+</html>

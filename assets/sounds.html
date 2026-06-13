@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sound Effects (SOUND_*) — Planet Blupi Docs</title>
+<style>
+
+:root {
+    --bg:        #0d1117;
+    --sidebar-bg:#161b22;
+    --border:    #30363d;
+    --text:      #c9d1d9;
+    --heading:   #e6edf3;
+    --link:      #58a6ff;
+    --link-hover:#79c0ff;
+    --code-bg:   #161b22;
+    --code-text: #f0f6fc;
+    --pre-bg:    #161b22;
+    --table-hd:  #21262d;
+    --table-alt: #161b22;
+    --accent:    #f78166;
+    --sidebar-w: 280px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ── Sidebar ─────────────────────────────────────────── */
+#sidebar {
+    width: var(--sidebar-w);
+    min-width: var(--sidebar-w);
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 0 0 2rem 0;
+    flex-shrink: 0;
+}
+
+#sidebar .logo {
+    display: block;
+    padding: 1rem 1rem 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--heading);
+    letter-spacing: 0.02em;
+}
+#sidebar .logo span { color: var(--accent); }
+
+#sidebar nav { padding: 0.5rem 0; }
+
+#sidebar .section-title {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6e7681;
+    padding: 0.85rem 1rem 0.2rem 1rem;
+}
+
+#sidebar a.nav-link {
+    display: block;
+    padding: 0.28rem 1rem 0.28rem 1.3rem;
+    font-size: 0.83rem;
+    color: #8b949e;
+    text-decoration: none;
+    border-left: 2px solid transparent;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+#sidebar a.nav-link:hover {
+    color: var(--link-hover);
+    background: rgba(88,166,255,0.06);
+    border-left-color: var(--link);
+}
+#sidebar a.nav-link.active {
+    color: var(--link);
+    border-left-color: var(--accent);
+    background: rgba(247,129,102,0.08);
+    font-weight: 600;
+}
+#sidebar a.nav-link.top-link {
+    font-size: 0.85rem;
+    color: #adbac7;
+    padding-left: 1rem;
+    font-weight: 600;
+}
+
+/* ── Main content ────────────────────────────────────── */
+#main {
+    flex: 1;
+    min-width: 0;
+    padding: 2.5rem 3rem 4rem 3rem;
+    max-width: 960px;
+}
+
+/* ── Breadcrumb ──────────────────────────────────────── */
+.breadcrumb {
+    font-size: 0.78rem;
+    color: #6e7681;
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    align-items: center;
+}
+.breadcrumb a { color: var(--link); text-decoration: none; }
+.breadcrumb a:hover { text-decoration: underline; }
+.breadcrumb .sep { color: #6e7681; }
+
+/* ── Typography ──────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--heading);
+    font-weight: 600;
+    line-height: 1.3;
+    margin-top: 1.8em;
+    margin-bottom: 0.6em;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.3em;
+}
+h1 { font-size: 1.9rem; margin-top: 0; }
+h2 { font-size: 1.4rem; }
+h3 { font-size: 1.15rem; border-bottom: none; }
+h4 { font-size: 1rem; border-bottom: none; color: var(--text); }
+
+p { margin: 0.75em 0; }
+
+a { color: var(--link); text-decoration: none; }
+a:hover { text-decoration: underline; color: var(--link-hover); }
+
+ul, ol { padding-left: 1.5em; margin: 0.5em 0; }
+li { margin: 0.25em 0; }
+
+/* ── Code ────────────────────────────────────────────── */
+code {
+    background: var(--code-bg);
+    color: var(--code-text);
+    padding: 0.15em 0.45em;
+    border-radius: 4px;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 0.85em;
+    border: 1px solid var(--border);
+}
+
+pre {
+    background: var(--pre-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1em 1.2em;
+    overflow-x: auto;
+    margin: 1em 0;
+    line-height: 1.55;
+}
+pre code {
+    background: transparent;
+    border: none;
+    padding: 0;
+    font-size: 0.83rem;
+    color: #e6edf3;
+}
+
+/* ── Tables ──────────────────────────────────────────── */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+    font-size: 0.88rem;
+    overflow-x: auto;
+    display: block;
+}
+thead tr { background: var(--table-hd); }
+th {
+    border: 1px solid var(--border);
+    padding: 0.5em 0.85em;
+    text-align: left;
+    color: var(--heading);
+    font-weight: 600;
+    white-space: nowrap;
+}
+td {
+    border: 1px solid var(--border);
+    padding: 0.45em 0.85em;
+    vertical-align: top;
+}
+tbody tr:nth-child(even) { background: var(--table-alt); }
+tbody tr:hover { background: #1c2128; }
+
+/* ── Blockquote ──────────────────────────────────────── */
+blockquote {
+    border-left: 3px solid var(--accent);
+    margin: 1em 0;
+    padding: 0.5em 1em;
+    background: rgba(247,129,102,0.07);
+    border-radius: 0 4px 4px 0;
+    color: #adbac7;
+    font-style: italic;
+}
+
+/* ── HR ──────────────────────────────────────────────── */
+hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2em 0;
+}
+
+/* ── Responsive ──────────────────────────────────────── */
+@media (max-width: 768px) {
+    body { flex-direction: column; }
+    #sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+    #main { padding: 1.5rem 1.2rem 3rem 1.2rem; }
+}
+
+/* ── Scroll ──────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: #30363d; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #484f58; }
+
+</style>
+</head>
+<body>
+<aside id="sidebar">
+  <a class="logo" href="../index.html">
+    <span>&#9679;</span> Planet Blupi Docs
+  </a>
+  <nav>
+<a class="nav-link top-link" href="../index.html">&#8962; Index</a>
+<span class="section-title">Overview</span>
+<a class="nav-link " href="../overview.html">Overview</a>
+<a class="nav-link " href="../history.html">History & Speedy Blupi</a>
+<span class="section-title">Architecture</span>
+<a class="nav-link " href="../architecture/overview.html">System Architecture</a>
+<a class="nav-link " href="../architecture/source-files.html">Source Files Reference</a>
+<span class="section-title">Engine Internals</span>
+<a class="nav-link " href="../engine/data-structures.html">Data Structures</a>
+<a class="nav-link " href="../engine/game-phases.html">Game Phases</a>
+<a class="nav-link " href="../engine/rendering.html">Rendering</a>
+<a class="nav-link " href="../engine/pathfinding.html">Pathfinding (A*)</a>
+<a class="nav-link " href="../engine/fog-of-war.html">Fog of War</a>
+<a class="nav-link " href="../engine/minimap.html">Minimap</a>
+<a class="nav-link " href="../engine/demo.html">Demo Recording</a>
+<a class="nav-link " href="../engine/undo.html">Undo System</a>
+<span class="section-title">World (Map)</span>
+<a class="nav-link " href="../world/file-format.html">World File Format</a>
+<a class="nav-link " href="../world/grid.html">World Grid</a>
+<a class="nav-link " href="../world/terrain.html">Terrain & Auto-tiling</a>
+<a class="nav-link " href="../world/objects.html">Object Layer</a>
+<span class="section-title">Characters</span>
+<a class="nav-link " href="../characters/overview.html">Character Overview</a>
+<a class="nav-link " href="../characters/blupi.html">Player (Blupi)</a>
+<a class="nav-link " href="../characters/enemies.html">Enemies</a>
+<a class="nav-link " href="../characters/vehicles.html">Vehicles</a>
+<a class="nav-link " href="../characters/actions.html">ACTION_* Codes</a>
+<a class="nav-link " href="../characters/goals.html">GOAL_* Interpreter</a>
+<span class="section-title">Gameplay</span>
+<a class="nav-link " href="../gameplay/win-conditions.html">Win Conditions</a>
+<a class="nav-link " href="../gameplay/toolbar.html">Toolbar Buttons</a>
+<a class="nav-link " href="../gameplay/directions.html">Directions</a>
+<a class="nav-link " href="../gameplay/skill-levels.html">Skill Levels</a>
+<a class="nav-link " href="../gameplay/regions.html">Regions / Themes</a>
+<a class="nav-link " href="../gameplay/cheat-codes.html">Cheat Codes</a>
+<span class="section-title">Assets</span>
+<a class="nav-link " href="images.html">Image Assets</a>
+<a class="nav-link active" href="sounds.html">Sound Effects</a>
+<a class="nav-link " href="music.html">Music Tracks</a>
+<a class="nav-link " href="data-files.html">Data Files</a>
+<a class="nav-link " href="movies.html">Movies</a>
+<span class="section-title">User Interface</span>
+<a class="nav-link " href="../ui/messages.html">Windows Messages</a>
+<a class="nav-link " href="../ui/cursor-sprites.html">Cursor Sprites</a>
+<a class="nav-link " href="../ui/statistics.html">Statistics Panel</a>
+<a class="nav-link " href="../ui/error-codes.html">Error Codes</a>
+<span class="section-title">Platforms</span>
+<a class="nav-link " href="../platform/build.html">Build System</a>
+<a class="nav-link " href="../platform/config.html">Configuration</a>
+<a class="nav-link " href="../platform/localisation.html">Localisation</a>
+<a class="nav-link " href="../platform/web.html">Web / Emscripten</a>
+<span class="section-title">Speedy Blupi Reference</span>
+<a class="nav-link " href="../speedy-blupi/overview.html">Relation to Speedy Blupi</a>
+<a class="nav-link " href="../speedy-blupi/actions-h.html">actions.h Reference</a>
+</nav>
+</aside>
+<main id="main">
+  <div class="breadcrumb"><a href="../index.html">Home</a> <span class="sep">/</span> <span>Assets</span> <span class="sep">/</span> <span>Sounds</span></div>
+  <h1 id="sound-effects-sound_">Sound Effects (SOUND_*)</h1>
+<p>All sound constants are defined in <code>include/def.h</code>.
+Each maps to <code>sound/soundNNN.blp</code> (zero-padded three-digit index).
+Sound files are raw PCM WAV data stored in the <code>.blp</code> container.</p>
+<hr />
+<h2 id="sound-effect-reference">Sound Effect Reference</h2>
+<table>
+<thead>
+<tr>
+<th>Constant</th>
+<th>Index</th>
+<th>File</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SOUND_CLICK</code></td>
+<td>0</td>
+<td><code>sound000.blp</code></td>
+<td>UI button click</td>
+</tr>
+<tr>
+<td><code>SOUND_BOING</code></td>
+<td>1</td>
+<td><code>sound001.blp</code></td>
+<td>Blupi bouncy acknowledgement (happy)</td>
+</tr>
+<tr>
+<td><code>SOUND_OK1</code></td>
+<td>2</td>
+<td><code>sound002.blp</code></td>
+<td>Blupi confirms command (voice 1)</td>
+</tr>
+<tr>
+<td><code>SOUND_OK2</code></td>
+<td>3</td>
+<td><code>sound003.blp</code></td>
+<td>Blupi confirms command (voice 2)</td>
+</tr>
+<tr>
+<td><code>SOUND_OK3</code></td>
+<td>4</td>
+<td><code>sound004.blp</code></td>
+<td>Blupi confirms command (voice 3)</td>
+</tr>
+<tr>
+<td><code>SOUND_GO1</code></td>
+<td>5</td>
+<td><code>sound005.blp</code></td>
+<td>Blupi starts moving (voice 1)</td>
+</tr>
+<tr>
+<td><code>SOUND_GO2</code></td>
+<td>6</td>
+<td><code>sound006.blp</code></td>
+<td>Blupi starts moving (voice 2)</td>
+</tr>
+<tr>
+<td><code>SOUND_GO3</code></td>
+<td>7</td>
+<td><code>sound007.blp</code></td>
+<td>Blupi starts moving (voice 3)</td>
+</tr>
+<tr>
+<td><code>SOUND_TERM1</code></td>
+<td>8</td>
+<td><code>sound008.blp</code></td>
+<td>Blupi finishes task (voice 1)</td>
+</tr>
+<tr>
+<td><code>SOUND_TERM2</code></td>
+<td>9</td>
+<td><code>sound009.blp</code></td>
+<td>Blupi finishes task (voice 2)</td>
+</tr>
+<tr>
+<td><code>SOUND_TERM3</code></td>
+<td>10</td>
+<td><code>sound010.blp</code></td>
+<td>Blupi finishes task (voice 3)</td>
+</tr>
+<tr>
+<td><code>SOUND_COUPTERRE</code></td>
+<td>11</td>
+<td><code>sound011.blp</code></td>
+<td>Digging earth</td>
+</tr>
+<tr>
+<td><code>SOUND_COUPTOC</code></td>
+<td>12</td>
+<td><code>sound012.blp</code></td>
+<td>Hitting wood / chopping</td>
+</tr>
+<tr>
+<td><code>SOUND_SAUT</code></td>
+<td>13</td>
+<td><code>sound013.blp</code></td>
+<td>Blupi jumping</td>
+</tr>
+<tr>
+<td><code>SOUND_HOP</code></td>
+<td>14</td>
+<td><code>sound014.blp</code></td>
+<td>Blupi hop (small jump over obstacle)</td>
+</tr>
+<tr>
+<td><code>SOUND_SCIE</code></td>
+<td>15</td>
+<td><code>sound015.blp</code></td>
+<td>Sawing wood</td>
+</tr>
+<tr>
+<td><code>SOUND_FEU</code></td>
+<td>16</td>
+<td><code>sound016.blp</code></td>
+<td>Fire burning</td>
+</tr>
+<tr>
+<td><code>SOUND_BRULE</code></td>
+<td>17</td>
+<td><code>sound017.blp</code></td>
+<td>Blupi burning / on fire</td>
+</tr>
+<tr>
+<td><code>SOUND_TCHAO</code></td>
+<td>18</td>
+<td><code>sound018.blp</code></td>
+<td>Blupi disappearing (death)</td>
+</tr>
+<tr>
+<td><code>SOUND_MANGE</code></td>
+<td>19</td>
+<td><code>sound019.blp</code></td>
+<td>Blupi eating</td>
+</tr>
+<tr>
+<td><code>SOUND_NAISSANCE</code></td>
+<td>20</td>
+<td><code>sound020.blp</code></td>
+<td>Birth of new Blupi (hatching from egg)</td>
+</tr>
+<tr>
+<td><code>SOUND_A_SAUT</code></td>
+<td>21</td>
+<td><code>sound021.blp</code></td>
+<td>Spider jumping</td>
+</tr>
+<tr>
+<td><code>SOUND_A_HIHI</code></td>
+<td>22</td>
+<td><code>sound022.blp</code></td>
+<td>Spider laugh / attack hiss</td>
+</tr>
+<tr>
+<td><code>SOUND_PLOUF</code></td>
+<td>23</td>
+<td><code>sound023.blp</code></td>
+<td>Splash (falling into water)</td>
+</tr>
+<tr>
+<td><code>SOUND_BUT</code></td>
+<td>24</td>
+<td><code>sound024.blp</code></td>
+<td>Goal / target reached</td>
+</tr>
+<tr>
+<td><code>SOUND_RAYON1</code></td>
+<td>25</td>
+<td><code>sound025.blp</code></td>
+<td>Electro ray beam start</td>
+</tr>
+<tr>
+<td><code>SOUND_RAYON2</code></td>
+<td>26</td>
+<td><code>sound026.blp</code></td>
+<td>Electro ray beam sustained</td>
+</tr>
+<tr>
+<td><code>SOUND_VIRUS</code></td>
+<td>27</td>
+<td><code>sound027.blp</code></td>
+<td>Virus spreading / infecting</td>
+</tr>
+<tr>
+<td><code>SOUND_GLISSE</code></td>
+<td>28</td>
+<td><code>sound028.blp</code></td>
+<td>Blupi sliding on ice</td>
+</tr>
+<tr>
+<td><code>SOUND_BOIT</code></td>
+<td>29</td>
+<td><code>sound029.blp</code></td>
+<td>Blupi drinking (potion)</td>
+</tr>
+<tr>
+<td><code>SOUND_LABO</code></td>
+<td>30</td>
+<td><code>sound030.blp</code></td>
+<td>Laboratory working</td>
+</tr>
+<tr>
+<td><code>SOUND_DYNAMITE</code></td>
+<td>31</td>
+<td><code>sound031.blp</code></td>
+<td>Dynamite explosion</td>
+</tr>
+<tr>
+<td><code>SOUND_PORTE</code></td>
+<td>32</td>
+<td><code>sound032.blp</code></td>
+<td>Door opening / closing</td>
+</tr>
+<tr>
+<td><code>SOUND_FLEUR</code></td>
+<td>33</td>
+<td><code>sound033.blp</code></td>
+<td>Picking flowers</td>
+</tr>
+<tr>
+<td><code>SOUND_T_MOTEUR</code></td>
+<td>34</td>
+<td><code>sound034.blp</code></td>
+<td>Tracks / tank engine</td>
+</tr>
+<tr>
+<td><code>SOUND_T_ECRASE</code></td>
+<td>35</td>
+<td><code>sound035.blp</code></td>
+<td>Tracks / tank crushing object</td>
+</tr>
+<tr>
+<td><code>SOUND_PIEGE</code></td>
+<td>36</td>
+<td><code>sound036.blp</code></td>
+<td>Trap triggered</td>
+</tr>
+<tr>
+<td><code>SOUND_AIE</code></td>
+<td>37</td>
+<td><code>sound037.blp</code></td>
+<td>Blupi hurt ("ouch!")</td>
+</tr>
+<tr>
+<td><code>SOUND_A_POISON</code></td>
+<td>38</td>
+<td><code>sound038.blp</code></td>
+<td>Spider poisoned / killed</td>
+</tr>
+<tr>
+<td><code>SOUND_R_MOTEUR</code></td>
+<td>39</td>
+<td><code>sound039.blp</code></td>
+<td>Robot motor running</td>
+</tr>
+<tr>
+<td><code>SOUND_R_APLAT</code></td>
+<td>40</td>
+<td><code>sound040.blp</code></td>
+<td>Robot flattening</td>
+</tr>
+<tr>
+<td><code>SOUND_R_ROTATE</code></td>
+<td>41</td>
+<td><code>sound041.blp</code></td>
+<td>Robot rotating</td>
+</tr>
+<tr>
+<td><code>SOUND_R_CHARGE</code></td>
+<td>42</td>
+<td><code>sound042.blp</code></td>
+<td>Robot recharging</td>
+</tr>
+<tr>
+<td><code>SOUND_B_SAUT</code></td>
+<td>43</td>
+<td><code>sound043.blp</code></td>
+<td>Bomb bouncing / hopping</td>
+</tr>
+<tr>
+<td><code>SOUND_BATEAU</code></td>
+<td>44</td>
+<td><code>sound044.blp</code></td>
+<td>Boat / water movement</td>
+</tr>
+<tr>
+<td><code>SOUND_JEEP</code></td>
+<td>45</td>
+<td><code>sound045.blp</code></td>
+<td>Jeep driving</td>
+</tr>
+<tr>
+<td><code>SOUND_MINE</code></td>
+<td>46</td>
+<td><code>sound046.blp</code></td>
+<td>Mine exploding</td>
+</tr>
+<tr>
+<td><code>SOUND_USINE</code></td>
+<td>47</td>
+<td><code>sound047.blp</code></td>
+<td>Factory operating</td>
+</tr>
+<tr>
+<td><code>SOUND_E_RAYON</code></td>
+<td>48</td>
+<td><code>sound048.blp</code></td>
+<td>Electro tower ray firing</td>
+</tr>
+<tr>
+<td><code>SOUND_E_TOURNE</code></td>
+<td>49</td>
+<td><code>sound049.blp</code></td>
+<td>Electro tower rotating</td>
+</tr>
+<tr>
+<td><code>SOUND_ARROSE</code></td>
+<td>50</td>
+<td><code>sound050.blp</code></td>
+<td>Blupi watering plants</td>
+</tr>
+<tr>
+<td><code>SOUND_BECHE</code></td>
+<td>51</td>
+<td><code>sound051.blp</code></td>
+<td>Blupi digging with spade</td>
+</tr>
+<tr>
+<td><code>SOUND_D_BOING</code></td>
+<td>52</td>
+<td><code>sound052.blp</code></td>
+<td>Disciple acknowledgement</td>
+</tr>
+<tr>
+<td><code>SOUND_D_OK</code></td>
+<td>53</td>
+<td><code>sound053.blp</code></td>
+<td>Disciple confirms command (voice)</td>
+</tr>
+<tr>
+<td><code>SOUND_D_GO</code></td>
+<td>54</td>
+<td><code>sound054.blp</code></td>
+<td>Disciple starts moving (voice)</td>
+</tr>
+<tr>
+<td><code>SOUND_D_TERM</code></td>
+<td>55</td>
+<td><code>sound055.blp</code></td>
+<td>Disciple finishes task (voice)</td>
+</tr>
+<tr>
+<td><code>SOUND_BOING1</code></td>
+<td>56</td>
+<td><code>sound056.blp</code></td>
+<td>Alternative boing 1</td>
+</tr>
+<tr>
+<td><code>SOUND_BOING2</code></td>
+<td>57</td>
+<td><code>sound057.blp</code></td>
+<td>Alternative boing 2</td>
+</tr>
+<tr>
+<td><code>SOUND_BOING3</code></td>
+<td>58</td>
+<td><code>sound058.blp</code></td>
+<td>Alternative boing 3</td>
+</tr>
+<tr>
+<td><code>SOUND_OK4</code></td>
+<td>59</td>
+<td><code>sound059.blp</code></td>
+<td>OK voice 4</td>
+</tr>
+<tr>
+<td><code>SOUND_OK5</code></td>
+<td>60</td>
+<td><code>sound060.blp</code></td>
+<td>OK voice 5</td>
+</tr>
+<tr>
+<td><code>SOUND_OK6</code></td>
+<td>61</td>
+<td><code>sound061.blp</code></td>
+<td>OK voice 6</td>
+</tr>
+<tr>
+<td><code>SOUND_OK1f</code></td>
+<td>62</td>
+<td><code>sound062.blp</code></td>
+<td>OK voice 1 (tired variant)</td>
+</tr>
+<tr>
+<td><code>SOUND_OK2f</code></td>
+<td>63</td>
+<td><code>sound063.blp</code></td>
+<td>OK voice 2 (tired variant)</td>
+</tr>
+<tr>
+<td><code>SOUND_OK3f</code></td>
+<td>64</td>
+<td><code>sound064.blp</code></td>
+<td>OK voice 3 (tired variant)</td>
+</tr>
+<tr>
+<td><code>SOUND_OK1e</code></td>
+<td>65</td>
+<td><code>sound065.blp</code></td>
+<td>OK voice 1 (enemy / electro variant)</td>
+</tr>
+<tr>
+<td><code>SOUND_OK2e</code></td>
+<td>66</td>
+<td><code>sound066.blp</code></td>
+<td>OK voice 2 (enemy variant)</td>
+</tr>
+<tr>
+<td><code>SOUND_OK3e</code></td>
+<td>67</td>
+<td><code>sound067.blp</code></td>
+<td>OK voice 3 (enemy variant)</td>
+</tr>
+<tr>
+<td><code>SOUND_GO4</code></td>
+<td>68</td>
+<td><code>sound068.blp</code></td>
+<td>Go voice 4</td>
+</tr>
+<tr>
+<td><code>SOUND_GO5</code></td>
+<td>69</td>
+<td><code>sound069.blp</code></td>
+<td>Go voice 5</td>
+</tr>
+<tr>
+<td><code>SOUND_GO6</code></td>
+<td>70</td>
+<td><code>sound070.blp</code></td>
+<td>Go voice 6</td>
+</tr>
+<tr>
+<td><code>SOUND_TERM4</code></td>
+<td>71</td>
+<td><code>sound071.blp</code></td>
+<td>Term voice 4</td>
+</tr>
+<tr>
+<td><code>SOUND_TERM5</code></td>
+<td>72</td>
+<td><code>sound072.blp</code></td>
+<td>Term voice 5</td>
+</tr>
+<tr>
+<td><code>SOUND_TERM6</code></td>
+<td>73</td>
+<td><code>sound073.blp</code></td>
+<td>Term voice 6</td>
+</tr>
+<tr>
+<td><code>SOUND_COUPSEC</code></td>
+<td>74</td>
+<td><code>sound074.blp</code></td>
+<td>Dry impact (stone on stone)</td>
+</tr>
+<tr>
+<td><code>SOUND_COUPPIERRE</code></td>
+<td>75</td>
+<td><code>sound075.blp</code></td>
+<td>Mining stone / rock</td>
+</tr>
+<tr>
+<td><code>SOUND_COUPSOURD</code></td>
+<td>76</td>
+<td><code>sound076.blp</code></td>
+<td>Muffled impact</td>
+</tr>
+<tr>
+<td><code>SOUND_COUPBREF</code></td>
+<td>77</td>
+<td><code>sound077.blp</code></td>
+<td>Brief impact</td>
+</tr>
+<tr>
+<td><code>SOUND_OPEN</code></td>
+<td>78</td>
+<td><code>sound078.blp</code></td>
+<td>Something opening</td>
+</tr>
+<tr>
+<td><code>SOUND_CLOSE</code></td>
+<td>79</td>
+<td><code>sound079.blp</code></td>
+<td>Something closing</td>
+</tr>
+<tr>
+<td><code>SOUND_TELEPORTE</code></td>
+<td>80</td>
+<td><code>sound080.blp</code></td>
+<td>Teleporter activating</td>
+</tr>
+<tr>
+<td><code>SOUND_ARMUREOPEN</code></td>
+<td>81</td>
+<td><code>sound081.blp</code></td>
+<td>Armour opening (entering)</td>
+</tr>
+<tr>
+<td><code>SOUND_ARMURECLOSE</code></td>
+<td>82</td>
+<td><code>sound082.blp</code></td>
+<td>Armour closing (exiting)</td>
+</tr>
+<tr>
+<td><code>SOUND_WIN</code></td>
+<td>83</td>
+<td><code>sound083.blp</code></td>
+<td>Mission victory fanfare</td>
+</tr>
+<tr>
+<td><code>SOUND_LOST</code></td>
+<td>84</td>
+<td><code>sound084.blp</code></td>
+<td>Mission defeat sound</td>
+</tr>
+<tr>
+<td><code>SOUND_MOVIE</code></td>
+<td>99</td>
+<td><code>sound099.blp</code></td>
+<td>Cinematic / AVI movie start sound</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="localised-voice-sounds">Localised Voice Sounds</h2>
+<p>Language-specific voice sounds override the base files.
+Overriding sounds (indices 0–82 or 84 depending on language) are placed in:</p>
+<table>
+<thead>
+<tr>
+<th>Directory</th>
+<th>Language</th>
+<th>Override count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sound/english/</code></td>
+<td>English</td>
+<td>83 files (000–082)</td>
+</tr>
+<tr>
+<td><code>sound/deutsch/</code></td>
+<td>German</td>
+<td>83 files (000–082)</td>
+</tr>
+<tr>
+<td><code>sound/francais/</code></td>
+<td>French</td>
+<td>83 files (000–082)</td>
+</tr>
+<tr>
+<td><code>sound/us/</code></td>
+<td>US English</td>
+<td>85 files (000–084)</td>
+</tr>
+</tbody>
+</table>
+<p>The active language is set by <code>Language=</code> in <code>data/config.def</code>.</p>
+<hr />
+<h2 id="sound-playback">Sound Playback</h2>
+<pre><code class="language-cpp">void CDecor::BlupiSound(int rank, int sound, POINT pos, BOOL bStop=FALSE)
+// Plays a SOUND_* effect at the character's position
+// bStop=TRUE: stop any currently playing sound for this character first
+
+// CSound methods:
+void CSound::Cache(int channel, const char* filename);  // load WAV
+void CSound::Play(int sound, POINT pos, BOOL bStop);    // play
+void CSound::PlayMusic(int music);                       // play MIDI
+void CSound::StopMusic();                                // stop MIDI
+</code></pre>
+</main>
+<script>
+// Highlight active nav link also by current URL
+(function(){
+  var links = document.querySelectorAll('#sidebar a.nav-link');
+  var cur = window.location.pathname.split('/').pop() || 'index.html';
+  links.forEach(function(a){
+    if(a.getAttribute('href').split('/').pop() === cur) a.classList.add('active');
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Enemies — Planet Blupi Docs</title>
+<style>
+
+:root {
+    --bg:        #0d1117;
+    --sidebar-bg:#161b22;
+    --border:    #30363d;
+    --text:      #c9d1d9;
+    --heading:   #e6edf3;
+    --link:      #58a6ff;
+    --link-hover:#79c0ff;
+    --code-bg:   #161b22;
+    --code-text: #f0f6fc;
+    --pre-bg:    #161b22;
+    --table-hd:  #21262d;
+    --table-alt: #161b22;
+    --accent:    #f78166;
+    --sidebar-w: 280px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ── Sidebar ─────────────────────────────────────────── */
+#sidebar {
+    width: var(--sidebar-w);
+    min-width: var(--sidebar-w);
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 0 0 2rem 0;
+    flex-shrink: 0;
+}
+
+#sidebar .logo {
+    display: block;
+    padding: 1rem 1rem 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--heading);
+    letter-spacing: 0.02em;
+}
+#sidebar .logo span { color: var(--accent); }
+
+#sidebar nav { padding: 0.5rem 0; }
+
+#sidebar .section-title {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6e7681;
+    padding: 0.85rem 1rem 0.2rem 1rem;
+}
+
+#sidebar a.nav-link {
+    display: block;
+    padding: 0.28rem 1rem 0.28rem 1.3rem;
+    font-size: 0.83rem;
+    color: #8b949e;
+    text-decoration: none;
+    border-left: 2px solid transparent;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+#sidebar a.nav-link:hover {
+    color: var(--link-hover);
+    background: rgba(88,166,255,0.06);
+    border-left-color: var(--link);
+}
+#sidebar a.nav-link.active {
+    color: var(--link);
+    border-left-color: var(--accent);
+    background: rgba(247,129,102,0.08);
+    font-weight: 600;
+}
+#sidebar a.nav-link.top-link {
+    font-size: 0.85rem;
+    color: #adbac7;
+    padding-left: 1rem;
+    font-weight: 600;
+}
+
+/* ── Main content ────────────────────────────────────── */
+#main {
+    flex: 1;
+    min-width: 0;
+    padding: 2.5rem 3rem 4rem 3rem;
+    max-width: 960px;
+}
+
+/* ── Breadcrumb ──────────────────────────────────────── */
+.breadcrumb {
+    font-size: 0.78rem;
+    color: #6e7681;
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    align-items: center;
+}
+.breadcrumb a { color: var(--link); text-decoration: none; }
+.breadcrumb a:hover { text-decoration: underline; }
+.breadcrumb .sep { color: #6e7681; }
+
+/* ── Typography ──────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--heading);
+    font-weight: 600;
+    line-height: 1.3;
+    margin-top: 1.8em;
+    margin-bottom: 0.6em;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.3em;
+}
+h1 { font-size: 1.9rem; margin-top: 0; }
+h2 { font-size: 1.4rem; }
+h3 { font-size: 1.15rem; border-bottom: none; }
+h4 { font-size: 1rem; border-bottom: none; color: var(--text); }
+
+p { margin: 0.75em 0; }
+
+a { color: var(--link); text-decoration: none; }
+a:hover { text-decoration: underline; color: var(--link-hover); }
+
+ul, ol { padding-left: 1.5em; margin: 0.5em 0; }
+li { margin: 0.25em 0; }
+
+/* ── Code ────────────────────────────────────────────── */
+code {
+    background: var(--code-bg);
+    color: var(--code-text);
+    padding: 0.15em 0.45em;
+    border-radius: 4px;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 0.85em;
+    border: 1px solid var(--border);
+}
+
+pre {
+    background: var(--pre-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1em 1.2em;
+    overflow-x: auto;
+    margin: 1em 0;
+    line-height: 1.55;
+}
+pre code {
+    background: transparent;
+    border: none;
+    padding: 0;
+    font-size: 0.83rem;
+    color: #e6edf3;
+}
+
+/* ── Tables ──────────────────────────────────────────── */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+    font-size: 0.88rem;
+    overflow-x: auto;
+    display: block;
+}
+thead tr { background: var(--table-hd); }
+th {
+    border: 1px solid var(--border);
+    padding: 0.5em 0.85em;
+    text-align: left;
+    color: var(--heading);
+    font-weight: 600;
+    white-space: nowrap;
+}
+td {
+    border: 1px solid var(--border);
+    padding: 0.45em 0.85em;
+    vertical-align: top;
+}
+tbody tr:nth-child(even) { background: var(--table-alt); }
+tbody tr:hover { background: #1c2128; }
+
+/* ── Blockquote ──────────────────────────────────────── */
+blockquote {
+    border-left: 3px solid var(--accent);
+    margin: 1em 0;
+    padding: 0.5em 1em;
+    background: rgba(247,129,102,0.07);
+    border-radius: 0 4px 4px 0;
+    color: #adbac7;
+    font-style: italic;
+}
+
+/* ── HR ──────────────────────────────────────────────── */
+hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2em 0;
+}
+
+/* ── Responsive ──────────────────────────────────────── */
+@media (max-width: 768px) {
+    body { flex-direction: column; }
+    #sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+    #main { padding: 1.5rem 1.2rem 3rem 1.2rem; }
+}
+
+/* ── Scroll ──────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: #30363d; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #484f58; }
+
+</style>
+</head>
+<body>
+<aside id="sidebar">
+  <a class="logo" href="../index.html">
+    <span>&#9679;</span> Planet Blupi Docs
+  </a>
+  <nav>
+<a class="nav-link top-link" href="../index.html">&#8962; Index</a>
+<span class="section-title">Overview</span>
+<a class="nav-link " href="../overview.html">Overview</a>
+<a class="nav-link " href="../history.html">History & Speedy Blupi</a>
+<span class="section-title">Architecture</span>
+<a class="nav-link " href="../architecture/overview.html">System Architecture</a>
+<a class="nav-link " href="../architecture/source-files.html">Source Files Reference</a>
+<span class="section-title">Engine Internals</span>
+<a class="nav-link " href="../engine/data-structures.html">Data Structures</a>
+<a class="nav-link " href="../engine/game-phases.html">Game Phases</a>
+<a class="nav-link " href="../engine/rendering.html">Rendering</a>
+<a class="nav-link " href="../engine/pathfinding.html">Pathfinding (A*)</a>
+<a class="nav-link " href="../engine/fog-of-war.html">Fog of War</a>
+<a class="nav-link " href="../engine/minimap.html">Minimap</a>
+<a class="nav-link " href="../engine/demo.html">Demo Recording</a>
+<a class="nav-link " href="../engine/undo.html">Undo System</a>
+<span class="section-title">World (Map)</span>
+<a class="nav-link " href="../world/file-format.html">World File Format</a>
+<a class="nav-link " href="../world/grid.html">World Grid</a>
+<a class="nav-link " href="../world/terrain.html">Terrain & Auto-tiling</a>
+<a class="nav-link " href="../world/objects.html">Object Layer</a>
+<span class="section-title">Characters</span>
+<a class="nav-link " href="overview.html">Character Overview</a>
+<a class="nav-link " href="blupi.html">Player (Blupi)</a>
+<a class="nav-link active" href="enemies.html">Enemies</a>
+<a class="nav-link " href="vehicles.html">Vehicles</a>
+<a class="nav-link " href="actions.html">ACTION_* Codes</a>
+<a class="nav-link " href="goals.html">GOAL_* Interpreter</a>
+<span class="section-title">Gameplay</span>
+<a class="nav-link " href="../gameplay/win-conditions.html">Win Conditions</a>
+<a class="nav-link " href="../gameplay/toolbar.html">Toolbar Buttons</a>
+<a class="nav-link " href="../gameplay/directions.html">Directions</a>
+<a class="nav-link " href="../gameplay/skill-levels.html">Skill Levels</a>
+<a class="nav-link " href="../gameplay/regions.html">Regions / Themes</a>
+<a class="nav-link " href="../gameplay/cheat-codes.html">Cheat Codes</a>
+<span class="section-title">Assets</span>
+<a class="nav-link " href="../assets/images.html">Image Assets</a>
+<a class="nav-link " href="../assets/sounds.html">Sound Effects</a>
+<a class="nav-link " href="../assets/music.html">Music Tracks</a>
+<a class="nav-link " href="../assets/data-files.html">Data Files</a>
+<a class="nav-link " href="../assets/movies.html">Movies</a>
+<span class="section-title">User Interface</span>
+<a class="nav-link " href="../ui/messages.html">Windows Messages</a>
+<a class="nav-link " href="../ui/cursor-sprites.html">Cursor Sprites</a>
+<a class="nav-link " href="../ui/statistics.html">Statistics Panel</a>
+<a class="nav-link " href="../ui/error-codes.html">Error Codes</a>
+<span class="section-title">Platforms</span>
+<a class="nav-link " href="../platform/build.html">Build System</a>
+<a class="nav-link " href="../platform/config.html">Configuration</a>
+<a class="nav-link " href="../platform/localisation.html">Localisation</a>
+<a class="nav-link " href="../platform/web.html">Web / Emscripten</a>
+<span class="section-title">Speedy Blupi Reference</span>
+<a class="nav-link " href="../speedy-blupi/overview.html">Relation to Speedy Blupi</a>
+<a class="nav-link " href="../speedy-blupi/actions-h.html">actions.h Reference</a>
+</nav>
+</aside>
+<main id="main">
+  <div class="breadcrumb"><a href="../index.html">Home</a> <span class="sep">/</span> <span>Characters</span> <span class="sep">/</span> <span>Enemies</span></div>
+  <h1 id="enemies">Enemies</h1>
+<h2 id="overview">Overview</h2>
+<p>All enemies are stored in the same <code>m_blupi[]</code> array as Blupi characters,
+identified by the <code>perso</code> field. Enemy AI runs through the same GOAL_* interpreter
+as player characters, with dedicated goal tables in <code>decgoal.cpp</code>.</p>
+<hr />
+<h2 id="spider-perso1-araignee">Spider (perso=1, Araignée)</h2>
+<p><strong>Behaviour</strong>: Active hunter. Pathfinds toward Blupi. On contact, poisons Blupi
+(<code>bMalade=TRUE</code>), which drains energy faster.</p>
+<p><strong>Special ability</strong>: Can jump over obstacles (<code>ACTION_A_SAUT</code>).</p>
+<p><strong>Weaknesses</strong>: Electro ray (<code>ACTION_A_GRILLE</code>), dynamite (<code>ACTION_A_POISON</code>).</p>
+<p><strong>Death sequence</strong>: <code>ACTION_A_MORT1</code> → <code>ACTION_A_MORT2</code> → <code>ACTION_A_MORT3</code> → <code>BlupiDelete()</code></p>
+<p><strong>Target search</strong>: <code>SearchSpiderObject(rank, initCel, distMax, foundCel, foundIcon)</code>
+finds the nearest Blupi or building to attack within <code>distMax</code> cells.</p>
+<p><strong>Sounds</strong>: <code>SOUND_A_SAUT</code> (jump), <code>SOUND_A_HIHI</code> (attack laugh), <code>SOUND_A_POISON</code> (when poisoned)</p>
+<hr />
+<h2 id="virus-perso2">Virus (perso=2)</h2>
+<p><strong>Behaviour</strong>: Slow spreader. Moves to adjacent objects and corrupts / destroys them.
+Does not directly attack Blupi but can destroy buildings, resources, and infrastructure.</p>
+<p><strong>Special ability</strong>: Spreads autonomously to neighbouring cells.</p>
+<p><strong>Weaknesses</strong>: Electro ray, dynamite.</p>
+<p><strong>Sounds</strong>: <code>SOUND_VIRUS</code> (spreading)</p>
+<hr />
+<h2 id="tracks-tank-perso3">Tracks / Tank (perso=3)</h2>
+<p><strong>Behaviour</strong>: Heavy crusher. Follows a path and crushes anything in the way
+(objects, buildings, Blupi). Cannot be stopped by palisades or walls.</p>
+<p><strong>Special ability</strong>: Crushes objects (<code>ACTION_T_ECRASE</code>).</p>
+<p><strong>Sounds</strong>: <code>SOUND_T_MOTEUR</code> (engine), <code>SOUND_T_ECRASE</code> (crushing)</p>
+<p><strong>Target search</strong>: <code>SearchTracksObject(rank, initCel, distMax, foundCel, foundIcon)</code></p>
+<hr />
+<h2 id="robot-perso4">Robot (perso=4)</h2>
+<p><strong>Behaviour</strong>: Most intelligent enemy. Has multiple capabilities:
+- Builds and mines like Blupi
+- Fires a ray beam at Blupi
+- Can recharge its energy</p>
+<p><strong>Actions</strong>: Stop, walk, flatten, build, delay, recharge, crush</p>
+<p><strong>Sounds</strong>: <code>SOUND_R_MOTEUR</code> (motor), <code>SOUND_R_APLAT</code> (flatten), <code>SOUND_R_ROTATE</code> (rotate),
+<code>SOUND_R_CHARGE</code> (recharge)</p>
+<p><strong>Target search</strong>: <code>SearchRobotObject(rank, initCel, distMax, foundCel, foundIcon, foundAction)</code>
+— returns both the target cell and the action to perform.</p>
+<p><strong>Robot goal tables</strong>: <code>WM_ACTION_R_BUILD1</code>–<code>R_BUILD6</code>, <code>WM_ACTION_R_MAKE1</code>–<code>R_MAKE6</code></p>
+<hr />
+<h2 id="bomb-perso5-bombe">Bomb (perso=5, Bombe)</h2>
+<p><strong>Behaviour</strong>: Autonomous seeker. Hops (<code>ACTION_B_MARCHE</code>) toward Blupi.
+Detonates on contact, creating a large explosion that destroys surrounding objects and Blupi.</p>
+<p><strong>Sounds</strong>: <code>SOUND_B_SAUT</code> (hopping)</p>
+<p><strong>Target search</strong>: <code>SearchBombeObject(rank, initCel, distMax, foundCel, foundIcon)</code></p>
+<hr />
+<h2 id="mine-detonator-perso6-detonateur">Mine Detonator (perso=6, Détonateur)</h2>
+<p><strong>Behaviour</strong>: Invisible passive entity. Exists only to trigger a mine explosion
+when a triggering condition is met (e.g. enemy walks onto the mine's cell).</p>
+<p><strong>Action</strong>: Only <code>ACTION_D_DELAY</code> (600) — just waits.</p>
+<p><strong>Notes</strong>: Created by <code>GOAL_AMORCE</code> when a mine is primed.</p>
+<hr />
+<h2 id="electro-tower-perso7-electro">Electro Tower (perso=7, Électro)</h2>
+<p><strong>Behaviour</strong>: Stationary. Rotates to track Blupi in range and fires electric rays.
+The ray is drawn as an animated <code>Move</code> element using <code>GOAL_ELECTRO</code>.</p>
+<p><strong>Actions</strong>:
+- <code>ACTION_E_STOP</code> (700) — idle
+- <code>ACTION_E_MARCHE</code> (701) — rotating / tracking
+- <code>ACTION_E_DEBUT</code> (702) — powering on
+- <code>ACTION_E_RAYON</code> (703) — firing ray</p>
+<p><strong>Sounds</strong>: <code>SOUND_E_RAYON</code> (ray fire), <code>SOUND_E_TOURNE</code> (rotation),
+<code>SOUND_RAYON1</code> (start), <code>SOUND_RAYON2</code> (sustained)</p>
+<p><strong>Target search</strong>: <code>SearchElectroObject(rank, initCel, distMax, foundCel, foundIcon)</code></p>
+<p><strong>Ray animation</strong>: <code>CDecor::BlupiStartStopRayon(rank, startCel, endCel)</code> creates
+a Move element that draws the electric ray beam between tower and target.</p>
+<p><strong>WM_ACTION_E_RAYON</strong> (+116) handles the firing sequence.</p>
+<hr />
+<h2 id="disciple-perso8-robot2">Disciple (perso=8, Robot2)</h2>
+<p><strong>Behaviour</strong>: Friendly helper. Can perform almost all Blupi tasks autonomously:
+build, chop, mine, pick flowers, water, dig, use dynamite.</p>
+<p><strong>Action range</strong>: <code>ACTION_D_STOP</code> (800) through <code>ACTION_D_BECHE</code> (810)</p>
+<p><strong>Sounds</strong>: Uses a distinct voice set:
+- <code>SOUND_D_BOING</code> (52) — acknowledgement
+- <code>SOUND_D_OK</code> (53) — confirms command
+- <code>SOUND_D_GO</code> (54) — starts moving
+- <code>SOUND_D_TERM</code> (55) — finishes task</p>
+<p><strong>Creation</strong>: <code>WM_ACTION_FABDISC</code> → <code>GOAL_NEWPERSO</code> with perso=8</p>
+<p><strong>Notes</strong>: The disciple cannot board vehicles. It uses the same GOAL_* tables as Blupi
+for most tasks, but with <code>ACTION_D_*</code> animation actions instead of <code>ACTION_*</code>.</p>
+</main>
+<script>
+// Highlight active nav link also by current URL
+(function(){
+  var links = document.querySelectorAll('#sidebar a.nav-link');
+  var cur = window.location.pathname.split('/').pop() || 'index.html';
+  links.forEach(function(a){
+    if(a.getAttribute('href').split('/').pop() === cur) a.classList.add('active');
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Windows Messages (WM_*) — Planet Blupi Docs</title>
+<style>
+
+:root {
+    --bg:        #0d1117;
+    --sidebar-bg:#161b22;
+    --border:    #30363d;
+    --text:      #c9d1d9;
+    --heading:   #e6edf3;
+    --link:      #58a6ff;
+    --link-hover:#79c0ff;
+    --code-bg:   #161b22;
+    --code-text: #f0f6fc;
+    --pre-bg:    #161b22;
+    --table-hd:  #21262d;
+    --table-alt: #161b22;
+    --accent:    #f78166;
+    --sidebar-w: 280px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ── Sidebar ─────────────────────────────────────────── */
+#sidebar {
+    width: var(--sidebar-w);
+    min-width: var(--sidebar-w);
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 0 0 2rem 0;
+    flex-shrink: 0;
+}
+
+#sidebar .logo {
+    display: block;
+    padding: 1rem 1rem 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--heading);
+    letter-spacing: 0.02em;
+}
+#sidebar .logo span { color: var(--accent); }
+
+#sidebar nav { padding: 0.5rem 0; }
+
+#sidebar .section-title {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6e7681;
+    padding: 0.85rem 1rem 0.2rem 1rem;
+}
+
+#sidebar a.nav-link {
+    display: block;
+    padding: 0.28rem 1rem 0.28rem 1.3rem;
+    font-size: 0.83rem;
+    color: #8b949e;
+    text-decoration: none;
+    border-left: 2px solid transparent;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+#sidebar a.nav-link:hover {
+    color: var(--link-hover);
+    background: rgba(88,166,255,0.06);
+    border-left-color: var(--link);
+}
+#sidebar a.nav-link.active {
+    color: var(--link);
+    border-left-color: var(--accent);
+    background: rgba(247,129,102,0.08);
+    font-weight: 600;
+}
+#sidebar a.nav-link.top-link {
+    font-size: 0.85rem;
+    color: #adbac7;
+    padding-left: 1rem;
+    font-weight: 600;
+}
+
+/* ── Main content ────────────────────────────────────── */
+#main {
+    flex: 1;
+    min-width: 0;
+    padding: 2.5rem 3rem 4rem 3rem;
+    max-width: 960px;
+}
+
+/* ── Breadcrumb ──────────────────────────────────────── */
+.breadcrumb {
+    font-size: 0.78rem;
+    color: #6e7681;
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    align-items: center;
+}
+.breadcrumb a { color: var(--link); text-decoration: none; }
+.breadcrumb a:hover { text-decoration: underline; }
+.breadcrumb .sep { color: #6e7681; }
+
+/* ── Typography ──────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--heading);
+    font-weight: 600;
+    line-height: 1.3;
+    margin-top: 1.8em;
+    margin-bottom: 0.6em;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.3em;
+}
+h1 { font-size: 1.9rem; margin-top: 0; }
+h2 { font-size: 1.4rem; }
+h3 { font-size: 1.15rem; border-bottom: none; }
+h4 { font-size: 1rem; border-bottom: none; color: var(--text); }
+
+p { margin: 0.75em 0; }
+
+a { color: var(--link); text-decoration: none; }
+a:hover { text-decoration: underline; color: var(--link-hover); }
+
+ul, ol { padding-left: 1.5em; margin: 0.5em 0; }
+li { margin: 0.25em 0; }
+
+/* ── Code ────────────────────────────────────────────── */
+code {
+    background: var(--code-bg);
+    color: var(--code-text);
+    padding: 0.15em 0.45em;
+    border-radius: 4px;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 0.85em;
+    border: 1px solid var(--border);
+}
+
+pre {
+    background: var(--pre-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1em 1.2em;
+    overflow-x: auto;
+    margin: 1em 0;
+    line-height: 1.55;
+}
+pre code {
+    background: transparent;
+    border: none;
+    padding: 0;
+    font-size: 0.83rem;
+    color: #e6edf3;
+}
+
+/* ── Tables ──────────────────────────────────────────── */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+    font-size: 0.88rem;
+    overflow-x: auto;
+    display: block;
+}
+thead tr { background: var(--table-hd); }
+th {
+    border: 1px solid var(--border);
+    padding: 0.5em 0.85em;
+    text-align: left;
+    color: var(--heading);
+    font-weight: 600;
+    white-space: nowrap;
+}
+td {
+    border: 1px solid var(--border);
+    padding: 0.45em 0.85em;
+    vertical-align: top;
+}
+tbody tr:nth-child(even) { background: var(--table-alt); }
+tbody tr:hover { background: #1c2128; }
+
+/* ── Blockquote ──────────────────────────────────────── */
+blockquote {
+    border-left: 3px solid var(--accent);
+    margin: 1em 0;
+    padding: 0.5em 1em;
+    background: rgba(247,129,102,0.07);
+    border-radius: 0 4px 4px 0;
+    color: #adbac7;
+    font-style: italic;
+}
+
+/* ── HR ──────────────────────────────────────────────── */
+hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2em 0;
+}
+
+/* ── Responsive ──────────────────────────────────────── */
+@media (max-width: 768px) {
+    body { flex-direction: column; }
+    #sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+    #main { padding: 1.5rem 1.2rem 3rem 1.2rem; }
+}
+
+/* ── Scroll ──────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: #30363d; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #484f58; }
+
+</style>
+</head>
+<body>
+<aside id="sidebar">
+  <a class="logo" href="../index.html">
+    <span>&#9679;</span> Planet Blupi Docs
+  </a>
+  <nav>
+<a class="nav-link top-link" href="../index.html">&#8962; Index</a>
+<span class="section-title">Overview</span>
+<a class="nav-link " href="../overview.html">Overview</a>
+<a class="nav-link " href="../history.html">History & Speedy Blupi</a>
+<span class="section-title">Architecture</span>
+<a class="nav-link " href="../architecture/overview.html">System Architecture</a>
+<a class="nav-link " href="../architecture/source-files.html">Source Files Reference</a>
+<span class="section-title">Engine Internals</span>
+<a class="nav-link " href="../engine/data-structures.html">Data Structures</a>
+<a class="nav-link " href="../engine/game-phases.html">Game Phases</a>
+<a class="nav-link " href="../engine/rendering.html">Rendering</a>
+<a class="nav-link " href="../engine/pathfinding.html">Pathfinding (A*)</a>
+<a class="nav-link " href="../engine/fog-of-war.html">Fog of War</a>
+<a class="nav-link " href="../engine/minimap.html">Minimap</a>
+<a class="nav-link " href="../engine/demo.html">Demo Recording</a>
+<a class="nav-link " href="../engine/undo.html">Undo System</a>
+<span class="section-title">World (Map)</span>
+<a class="nav-link " href="../world/file-format.html">World File Format</a>
+<a class="nav-link " href="../world/grid.html">World Grid</a>
+<a class="nav-link " href="../world/terrain.html">Terrain & Auto-tiling</a>
+<a class="nav-link " href="../world/objects.html">Object Layer</a>
+<span class="section-title">Characters</span>
+<a class="nav-link " href="../characters/overview.html">Character Overview</a>
+<a class="nav-link " href="../characters/blupi.html">Player (Blupi)</a>
+<a class="nav-link " href="../characters/enemies.html">Enemies</a>
+<a class="nav-link " href="../characters/vehicles.html">Vehicles</a>
+<a class="nav-link " href="../characters/actions.html">ACTION_* Codes</a>
+<a class="nav-link " href="../characters/goals.html">GOAL_* Interpreter</a>
+<span class="section-title">Gameplay</span>
+<a class="nav-link " href="../gameplay/win-conditions.html">Win Conditions</a>
+<a class="nav-link " href="../gameplay/toolbar.html">Toolbar Buttons</a>
+<a class="nav-link " href="../gameplay/directions.html">Directions</a>
+<a class="nav-link " href="../gameplay/skill-levels.html">Skill Levels</a>
+<a class="nav-link " href="../gameplay/regions.html">Regions / Themes</a>
+<a class="nav-link " href="../gameplay/cheat-codes.html">Cheat Codes</a>
+<span class="section-title">Assets</span>
+<a class="nav-link " href="../assets/images.html">Image Assets</a>
+<a class="nav-link " href="../assets/sounds.html">Sound Effects</a>
+<a class="nav-link " href="../assets/music.html">Music Tracks</a>
+<a class="nav-link " href="../assets/data-files.html">Data Files</a>
+<a class="nav-link " href="../assets/movies.html">Movies</a>
+<span class="section-title">User Interface</span>
+<a class="nav-link active" href="messages.html">Windows Messages</a>
+<a class="nav-link " href="cursor-sprites.html">Cursor Sprites</a>
+<a class="nav-link " href="statistics.html">Statistics Panel</a>
+<a class="nav-link " href="error-codes.html">Error Codes</a>
+<span class="section-title">Platforms</span>
+<a class="nav-link " href="../platform/build.html">Build System</a>
+<a class="nav-link " href="../platform/config.html">Configuration</a>
+<a class="nav-link " href="../platform/localisation.html">Localisation</a>
+<a class="nav-link " href="../platform/web.html">Web / Emscripten</a>
+<span class="section-title">Speedy Blupi Reference</span>
+<a class="nav-link " href="../speedy-blupi/overview.html">Relation to Speedy Blupi</a>
+<a class="nav-link " href="../speedy-blupi/actions-h.html">actions.h Reference</a>
+</nav>
+</aside>
+<main id="main">
+  <div class="breadcrumb"><a href="../index.html">Home</a> <span class="sep">/</span> <span>Ui</span> <span class="sep">/</span> <span>Messages</span></div>
+  <h1 id="windows-messages-wm_">Windows Messages (WM_*)</h1>
+<p>All custom Windows messages are defined as <code>WM_USER+N</code> offsets in <code>include/def.h</code>.</p>
+<hr />
+<h2 id="wm_update">WM_UPDATE</h2>
+<table>
+<thead>
+<tr>
+<th>Constant</th>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>WM_UPDATE</code></td>
+<td>WM_USER+1</td>
+<td>Force redraw of the game window</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="wm_decor-decoration-messages">WM_DECOR* — Decoration Messages</h2>
+<table>
+<thead>
+<tr>
+<th>Constant</th>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>WM_DECOR1</code></td>
+<td>WM_USER+20</td>
+<td>Decoration event 1</td>
+</tr>
+<tr>
+<td><code>WM_DECOR2</code></td>
+<td>WM_USER+21</td>
+<td>Decoration event 2</td>
+</tr>
+<tr>
+<td><code>WM_DECOR3</code></td>
+<td>WM_USER+22</td>
+<td>Decoration event 3</td>
+</tr>
+<tr>
+<td><code>WM_DECOR4</code></td>
+<td>WM_USER+23</td>
+<td>Decoration event 4</td>
+</tr>
+<tr>
+<td><code>WM_DECOR5</code></td>
+<td>WM_USER+24</td>
+<td>Decoration event 5</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="wm_action_-character-action-messages">WM_ACTION_* — Character Action Messages</h2>
+<p>These are sent by <code>CEvent</code> to <code>CDecor</code> to trigger specific goal sequences.
+Each maps to a named table in <code>decgoal.cpp</code> via <code>GetTableGoal()</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Constant</th>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>WM_ACTION_GO</code></td>
+<td>WM_USER+30</td>
+<td>Move to target cell</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_ABAT1</code>–<code>ABAT6</code></td>
+<td>+31–+36</td>
+<td>Chop tree (6 variants)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_BUILD1</code>–<code>BUILD6</code></td>
+<td>+37–+42</td>
+<td>Build construction types 1–6</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_STOP</code></td>
+<td>+43</td>
+<td>Stop character</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_CARRY</code></td>
+<td>+44</td>
+<td>Pick up object</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_DEPOSE</code></td>
+<td>+45</td>
+<td>Put down object</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_ROC1</code>–<code>ROC7</code></td>
+<td>+46–+52</td>
+<td>Mine rock (7 variants)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_MUR</code></td>
+<td>+53</td>
+<td>Build wall</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_CULTIVE</code></td>
+<td>+54</td>
+<td>Cultivate</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_CULTIVE2</code></td>
+<td>+55</td>
+<td>Cultivate variant 2</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_MANGE</code></td>
+<td>+56</td>
+<td>Eat food</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_MAKE</code></td>
+<td>+57</td>
+<td>Generic make</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_BUILD</code></td>
+<td>+58</td>
+<td>Generic build</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_PALIS</code></td>
+<td>+59</td>
+<td>Build palisade</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_NEWBLUPI</code></td>
+<td>+60</td>
+<td>Hatch new Blupi</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_PONTE</code></td>
+<td>+61</td>
+<td>Build bridge (east)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_PONTS</code></td>
+<td>+62</td>
+<td>Build bridge (south)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_PONTO</code></td>
+<td>+63</td>
+<td>Build bridge (west)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_PONTN</code></td>
+<td>+64</td>
+<td>Build bridge (north)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_PONTEL</code></td>
+<td>+65</td>
+<td>Build bridge (east, long)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_PONTSL</code></td>
+<td>+66</td>
+<td>Build bridge (south, long)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_PONTOL</code></td>
+<td>+67</td>
+<td>Build bridge (west, long)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_PONTNL</code></td>
+<td>+68</td>
+<td>Build bridge (north, long)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_TOUR</code></td>
+<td>+69</td>
+<td>Build watchtower</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_CARRY2</code></td>
+<td>+70</td>
+<td>Pick up object (variant 2)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_DEPOSE2</code></td>
+<td>+71</td>
+<td>Put down object (variant 2)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_MANGE2</code></td>
+<td>+72</td>
+<td>Eat (variant 2)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_BOIT</code></td>
+<td>+73</td>
+<td>Drink potion</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_BOIT2</code></td>
+<td>+74</td>
+<td>Drink (variant 2)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_LABO</code></td>
+<td>+75</td>
+<td>Use laboratory</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_FLEUR1</code></td>
+<td>+76</td>
+<td>Pick flowers (1)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_FLEUR2</code></td>
+<td>+77</td>
+<td>Pick flowers (2)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_DYNAMITE</code></td>
+<td>+78</td>
+<td>Place / detonate dynamite</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_DYNAMITE2</code></td>
+<td>+79</td>
+<td>Dynamite (variant 2)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_T_DYNAMITE</code></td>
+<td>+80</td>
+<td>Tracks dynamite</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_FLEUR3</code></td>
+<td>+81</td>
+<td>Pick flowers (3)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_R_BUILD1</code>–<code>R_BUILD6</code></td>
+<td>+82,+84,+86,+88,+90,+114</td>
+<td>Robot build 1–6</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_R_MAKE1</code>–<code>R_MAKE6</code></td>
+<td>+83,+85,+87,+89,+91,+115</td>
+<td>Robot make 1–6</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_BATEAUE</code></td>
+<td>+92</td>
+<td>Boat move east</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_BATEAUS</code></td>
+<td>+93</td>
+<td>Boat move south</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_BATEAUO</code></td>
+<td>+94</td>
+<td>Boat move west</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_BATEAUN</code></td>
+<td>+95</td>
+<td>Boat move north</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_BATEAUDE</code></td>
+<td>+96</td>
+<td>Boat disembark east</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_BATEAUDS</code></td>
+<td>+97</td>
+<td>Boat disembark south</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_BATEAUDO</code></td>
+<td>+98</td>
+<td>Boat disembark west</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_BATEAUDN</code></td>
+<td>+99</td>
+<td>Boat disembark north</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_BATEAUAE</code></td>
+<td>+100</td>
+<td>Boat embark east</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_BATEAUAS</code></td>
+<td>+101</td>
+<td>Boat embark south</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_BATEAUAO</code></td>
+<td>+102</td>
+<td>Boat embark west</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_BATEAUAN</code></td>
+<td>+103</td>
+<td>Boat embark north</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_MJEEP</code></td>
+<td>+104</td>
+<td>Board jeep</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_DJEEP</code></td>
+<td>+105</td>
+<td>Disembark jeep</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_DRAPEAU</code></td>
+<td>+106</td>
+<td>Place flag (1)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_DRAPEAU2</code></td>
+<td>+107</td>
+<td>Place flag (2)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_DRAPEAU3</code></td>
+<td>+108</td>
+<td>Place flag (3)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_EXTRAIT</code></td>
+<td>+109</td>
+<td>Extract iron ore</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_FABJEEP</code></td>
+<td>+110</td>
+<td>Manufacture jeep</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_FABMINE</code></td>
+<td>+111</td>
+<td>Manufacture mine</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_MINE</code></td>
+<td>+112</td>
+<td>Trigger mine</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_MINE2</code></td>
+<td>+113</td>
+<td>Mine variant 2</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_E_RAYON</code></td>
+<td>+116</td>
+<td>Electro tower fire ray</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_ELECTRO</code></td>
+<td>+117</td>
+<td>Blupi electrocuted</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_ELECTROm</code></td>
+<td>+118</td>
+<td>Electro mine</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_GRILLE</code></td>
+<td>+119</td>
+<td>Electro grill effect</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_MAISON</code></td>
+<td>+120</td>
+<td>Go home</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_FABDISC</code></td>
+<td>+121</td>
+<td>Create disciple</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_A_MORT</code></td>
+<td>+122</td>
+<td>Spider death</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_REPEAT</code></td>
+<td>+123</td>
+<td>Repeat last action</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_TELEPORTE00</code></td>
+<td>+124</td>
+<td>Teleport (variant 00)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_TELEPORTE10</code></td>
+<td>+125</td>
+<td>Teleport (variant 10)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_TELEPORTE01</code></td>
+<td>+126</td>
+<td>Teleport (variant 01)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_TELEPORTE11</code></td>
+<td>+127</td>
+<td>Teleport (variant 11)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_FABARMURE</code></td>
+<td>+128</td>
+<td>Manufacture armour</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_MARMURE</code></td>
+<td>+129</td>
+<td>Enter armour</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_DARMURE</code></td>
+<td>+130</td>
+<td>Exit armour</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="wm_button-toolbar-button-messages">WM_BUTTON* — Toolbar Button Messages</h2>
+<table>
+<thead>
+<tr>
+<th>Range</th>
+<th>Values</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>WM_BUTTON0</code>–<code>WM_BUTTON39</code></td>
+<td>WM_USER+200 – WM_USER+239</td>
+<td>Toolbar button 0–39 clicked</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="wm_read-wm_write-saveload-slot-messages">WM_READ<em> / WM_WRITE</em> — Save/Load Slot Messages</h2>
+<table>
+<thead>
+<tr>
+<th>Range</th>
+<th>Values</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>WM_READ0</code>–<code>WM_READ9</code></td>
+<td>WM_USER+300 – WM_USER+309</td>
+<td>Load game slot 0–9</td>
+</tr>
+<tr>
+<td><code>WM_WRITE0</code>–<code>WM_WRITE9</code></td>
+<td>WM_USER+310 – WM_USER+319</td>
+<td>Save game slot 0–9</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="wm_phase_-phase-transition-messages">WM_PHASE_* — Phase Transition Messages</h2>
+<p>See <a href="../engine/game-phases.html">Game Phases</a> for the complete list.
+Range: <code>WM_USER+500</code> through <code>WM_USER+537</code>.</p>
+<hr />
+<h2 id="wm_prev-wm_next-wm_movie">WM_PREV / WM_NEXT / WM_MOVIE</h2>
+<table>
+<thead>
+<tr>
+<th>Constant</th>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>WM_PREV</code></td>
+<td>WM_USER+600</td>
+<td>Navigate previous</td>
+</tr>
+<tr>
+<td><code>WM_NEXT</code></td>
+<td>WM_USER+601</td>
+<td>Navigate next</td>
+</tr>
+<tr>
+<td><code>WM_MOVIE</code></td>
+<td>WM_USER+602</td>
+<td>Start movie</td>
+</tr>
+</tbody>
+</table>
+</main>
+<script>
+// Highlight active nav link also by current URL
+(function(){
+  var links = document.querySelectorAll('#sidebar a.nav-link');
+  var cur = window.location.pathname.split('/').pop() || 'index.html';
+  links.forEach(function(a){
+    if(a.getAttribute('href').split('/').pop() === cur) a.classList.add('active');
+  });
+})();
+</script>
+</body>
+</html>

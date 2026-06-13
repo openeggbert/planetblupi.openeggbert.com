@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rendering — Planet Blupi Docs</title>
+<style>
+
+:root {
+    --bg:        #0d1117;
+    --sidebar-bg:#161b22;
+    --border:    #30363d;
+    --text:      #c9d1d9;
+    --heading:   #e6edf3;
+    --link:      #58a6ff;
+    --link-hover:#79c0ff;
+    --code-bg:   #161b22;
+    --code-text: #f0f6fc;
+    --pre-bg:    #161b22;
+    --table-hd:  #21262d;
+    --table-alt: #161b22;
+    --accent:    #f78166;
+    --sidebar-w: 280px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ── Sidebar ─────────────────────────────────────────── */
+#sidebar {
+    width: var(--sidebar-w);
+    min-width: var(--sidebar-w);
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 0 0 2rem 0;
+    flex-shrink: 0;
+}
+
+#sidebar .logo {
+    display: block;
+    padding: 1rem 1rem 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--heading);
+    letter-spacing: 0.02em;
+}
+#sidebar .logo span { color: var(--accent); }
+
+#sidebar nav { padding: 0.5rem 0; }
+
+#sidebar .section-title {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6e7681;
+    padding: 0.85rem 1rem 0.2rem 1rem;
+}
+
+#sidebar a.nav-link {
+    display: block;
+    padding: 0.28rem 1rem 0.28rem 1.3rem;
+    font-size: 0.83rem;
+    color: #8b949e;
+    text-decoration: none;
+    border-left: 2px solid transparent;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+#sidebar a.nav-link:hover {
+    color: var(--link-hover);
+    background: rgba(88,166,255,0.06);
+    border-left-color: var(--link);
+}
+#sidebar a.nav-link.active {
+    color: var(--link);
+    border-left-color: var(--accent);
+    background: rgba(247,129,102,0.08);
+    font-weight: 600;
+}
+#sidebar a.nav-link.top-link {
+    font-size: 0.85rem;
+    color: #adbac7;
+    padding-left: 1rem;
+    font-weight: 600;
+}
+
+/* ── Main content ────────────────────────────────────── */
+#main {
+    flex: 1;
+    min-width: 0;
+    padding: 2.5rem 3rem 4rem 3rem;
+    max-width: 960px;
+}
+
+/* ── Breadcrumb ──────────────────────────────────────── */
+.breadcrumb {
+    font-size: 0.78rem;
+    color: #6e7681;
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    align-items: center;
+}
+.breadcrumb a { color: var(--link); text-decoration: none; }
+.breadcrumb a:hover { text-decoration: underline; }
+.breadcrumb .sep { color: #6e7681; }
+
+/* ── Typography ──────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--heading);
+    font-weight: 600;
+    line-height: 1.3;
+    margin-top: 1.8em;
+    margin-bottom: 0.6em;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.3em;
+}
+h1 { font-size: 1.9rem; margin-top: 0; }
+h2 { font-size: 1.4rem; }
+h3 { font-size: 1.15rem; border-bottom: none; }
+h4 { font-size: 1rem; border-bottom: none; color: var(--text); }
+
+p { margin: 0.75em 0; }
+
+a { color: var(--link); text-decoration: none; }
+a:hover { text-decoration: underline; color: var(--link-hover); }
+
+ul, ol { padding-left: 1.5em; margin: 0.5em 0; }
+li { margin: 0.25em 0; }
+
+/* ── Code ────────────────────────────────────────────── */
+code {
+    background: var(--code-bg);
+    color: var(--code-text);
+    padding: 0.15em 0.45em;
+    border-radius: 4px;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 0.85em;
+    border: 1px solid var(--border);
+}
+
+pre {
+    background: var(--pre-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1em 1.2em;
+    overflow-x: auto;
+    margin: 1em 0;
+    line-height: 1.55;
+}
+pre code {
+    background: transparent;
+    border: none;
+    padding: 0;
+    font-size: 0.83rem;
+    color: #e6edf3;
+}
+
+/* ── Tables ──────────────────────────────────────────── */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+    font-size: 0.88rem;
+    overflow-x: auto;
+    display: block;
+}
+thead tr { background: var(--table-hd); }
+th {
+    border: 1px solid var(--border);
+    padding: 0.5em 0.85em;
+    text-align: left;
+    color: var(--heading);
+    font-weight: 600;
+    white-space: nowrap;
+}
+td {
+    border: 1px solid var(--border);
+    padding: 0.45em 0.85em;
+    vertical-align: top;
+}
+tbody tr:nth-child(even) { background: var(--table-alt); }
+tbody tr:hover { background: #1c2128; }
+
+/* ── Blockquote ──────────────────────────────────────── */
+blockquote {
+    border-left: 3px solid var(--accent);
+    margin: 1em 0;
+    padding: 0.5em 1em;
+    background: rgba(247,129,102,0.07);
+    border-radius: 0 4px 4px 0;
+    color: #adbac7;
+    font-style: italic;
+}
+
+/* ── HR ──────────────────────────────────────────────── */
+hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2em 0;
+}
+
+/* ── Responsive ──────────────────────────────────────── */
+@media (max-width: 768px) {
+    body { flex-direction: column; }
+    #sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+    #main { padding: 1.5rem 1.2rem 3rem 1.2rem; }
+}
+
+/* ── Scroll ──────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: #30363d; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #484f58; }
+
+</style>
+</head>
+<body>
+<aside id="sidebar">
+  <a class="logo" href="../index.html">
+    <span>&#9679;</span> Planet Blupi Docs
+  </a>
+  <nav>
+<a class="nav-link top-link" href="../index.html">&#8962; Index</a>
+<span class="section-title">Overview</span>
+<a class="nav-link " href="../overview.html">Overview</a>
+<a class="nav-link " href="../history.html">History & Speedy Blupi</a>
+<span class="section-title">Architecture</span>
+<a class="nav-link " href="../architecture/overview.html">System Architecture</a>
+<a class="nav-link " href="../architecture/source-files.html">Source Files Reference</a>
+<span class="section-title">Engine Internals</span>
+<a class="nav-link " href="data-structures.html">Data Structures</a>
+<a class="nav-link " href="game-phases.html">Game Phases</a>
+<a class="nav-link active" href="rendering.html">Rendering</a>
+<a class="nav-link " href="pathfinding.html">Pathfinding (A*)</a>
+<a class="nav-link " href="fog-of-war.html">Fog of War</a>
+<a class="nav-link " href="minimap.html">Minimap</a>
+<a class="nav-link " href="demo.html">Demo Recording</a>
+<a class="nav-link " href="undo.html">Undo System</a>
+<span class="section-title">World (Map)</span>
+<a class="nav-link " href="../world/file-format.html">World File Format</a>
+<a class="nav-link " href="../world/grid.html">World Grid</a>
+<a class="nav-link " href="../world/terrain.html">Terrain & Auto-tiling</a>
+<a class="nav-link " href="../world/objects.html">Object Layer</a>
+<span class="section-title">Characters</span>
+<a class="nav-link " href="../characters/overview.html">Character Overview</a>
+<a class="nav-link " href="../characters/blupi.html">Player (Blupi)</a>
+<a class="nav-link " href="../characters/enemies.html">Enemies</a>
+<a class="nav-link " href="../characters/vehicles.html">Vehicles</a>
+<a class="nav-link " href="../characters/actions.html">ACTION_* Codes</a>
+<a class="nav-link " href="../characters/goals.html">GOAL_* Interpreter</a>
+<span class="section-title">Gameplay</span>
+<a class="nav-link " href="../gameplay/win-conditions.html">Win Conditions</a>
+<a class="nav-link " href="../gameplay/toolbar.html">Toolbar Buttons</a>
+<a class="nav-link " href="../gameplay/directions.html">Directions</a>
+<a class="nav-link " href="../gameplay/skill-levels.html">Skill Levels</a>
+<a class="nav-link " href="../gameplay/regions.html">Regions / Themes</a>
+<a class="nav-link " href="../gameplay/cheat-codes.html">Cheat Codes</a>
+<span class="section-title">Assets</span>
+<a class="nav-link " href="../assets/images.html">Image Assets</a>
+<a class="nav-link " href="../assets/sounds.html">Sound Effects</a>
+<a class="nav-link " href="../assets/music.html">Music Tracks</a>
+<a class="nav-link " href="../assets/data-files.html">Data Files</a>
+<a class="nav-link " href="../assets/movies.html">Movies</a>
+<span class="section-title">User Interface</span>
+<a class="nav-link " href="../ui/messages.html">Windows Messages</a>
+<a class="nav-link " href="../ui/cursor-sprites.html">Cursor Sprites</a>
+<a class="nav-link " href="../ui/statistics.html">Statistics Panel</a>
+<a class="nav-link " href="../ui/error-codes.html">Error Codes</a>
+<span class="section-title">Platforms</span>
+<a class="nav-link " href="../platform/build.html">Build System</a>
+<a class="nav-link " href="../platform/config.html">Configuration</a>
+<a class="nav-link " href="../platform/localisation.html">Localisation</a>
+<a class="nav-link " href="../platform/web.html">Web / Emscripten</a>
+<span class="section-title">Speedy Blupi Reference</span>
+<a class="nav-link " href="../speedy-blupi/overview.html">Relation to Speedy Blupi</a>
+<a class="nav-link " href="../speedy-blupi/actions-h.html">actions.h Reference</a>
+</nav>
+</aside>
+<main id="main">
+  <div class="breadcrumb"><a href="../index.html">Home</a> <span class="sep">/</span> <span>Engine</span> <span class="sep">/</span> <span>Rendering</span></div>
+  <h1 id="rendering">Rendering</h1>
+<h2 id="image-channels-cpixmap">Image Channels (CPixmap)</h2>
+<p><code>CPixmap</code> manages a set of named <strong>channels</strong> (0–14), each holding one <code>.blp</code>
+image with its own palette and icon set.</p>
+<pre><code class="language-cpp">// Load an image into a channel:
+pPixmap-&gt;Cache(channel, &quot;image/blupi.blp&quot;);
+
+// Draw an icon from a channel:
+pPixmap-&gt;DrawIcon(hdc, channel, icon, x, y);
+</code></pre>
+<h3 id="channel-reference">Channel Reference</h3>
+<table>
+<thead>
+<tr>
+<th>Constant</th>
+<th>Value</th>
+<th>Image file</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CHBACK</code></td>
+<td>0</td>
+<td>various (phase background)</td>
+<td>Current screen background</td>
+</tr>
+<tr>
+<td><code>CHFLOOR</code></td>
+<td>1</td>
+<td><code>floor000–003.blp</code></td>
+<td>Floor tiles (region 0–3)</td>
+</tr>
+<tr>
+<td><code>CHOBJECT</code></td>
+<td>2</td>
+<td><code>obj000–003.blp</code></td>
+<td>Objects — lower part (region 0–3)</td>
+</tr>
+<tr>
+<td><code>CHOBJECTo</code></td>
+<td>3</td>
+<td><code>obj-o000–003.blp</code></td>
+<td>Objects — upper overlay (region 0–3)</td>
+</tr>
+<tr>
+<td><code>CHBLUPI</code></td>
+<td>4</td>
+<td><code>blupi.blp</code></td>
+<td>All animation frames: Blupi + all enemies</td>
+</tr>
+<tr>
+<td><code>CHHILI</code></td>
+<td>5</td>
+<td><code>hili.blp</code></td>
+<td>Selection / action highlight overlays</td>
+</tr>
+<tr>
+<td><code>CHFOG</code></td>
+<td>6</td>
+<td><code>fog.blp</code></td>
+<td>15 fog-of-war tile patterns</td>
+</tr>
+<tr>
+<td><code>CHMASK1</code></td>
+<td>7</td>
+<td><code>mask1.blp</code></td>
+<td>Alpha mask for Blupi sprite blending</td>
+</tr>
+<tr>
+<td><code>CHLITTLE</code></td>
+<td>8</td>
+<td><code>little.blp</code></td>
+<td>Small pixel font (10 px characters)</td>
+</tr>
+<tr>
+<td><code>CHMAP</code></td>
+<td>9</td>
+<td>— (generated)</td>
+<td>Minimap (128×128 px, generated from world data)</td>
+</tr>
+<tr>
+<td><code>CHBUTTON</code></td>
+<td>10</td>
+<td><code>button.blp</code></td>
+<td>Toolbar button icons (35 BUTTON_* types)</td>
+</tr>
+<tr>
+<td><code>CHGROUND</code></td>
+<td>11</td>
+<td><code>floor000–003.blp</code></td>
+<td>Floor — second channel (for layering)</td>
+</tr>
+<tr>
+<td><code>CHJAUGE</code></td>
+<td>12</td>
+<td><code>jauge.blp</code></td>
+<td>Energy / progress gauge sprites</td>
+</tr>
+<tr>
+<td><code>CHTEXT</code></td>
+<td>13</td>
+<td><code>text.blp</code></td>
+<td>Main text font (16×16 px), white, red and slim variants</td>
+</tr>
+<tr>
+<td><code>CHBIGNUM</code></td>
+<td>14</td>
+<td><code>bignum.blp</code></td>
+<td>Large digit sprites for score / timer</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="draw-order-z-order">Draw Order (Z-order)</h2>
+<p>Each game tick renders the scene in this order:</p>
+<pre><code>1. Background (CHBACK) — fixed HUD frame
+2. Minimap (CHMAP) — 128×128 px top-left
+3. Floor tiles (CHFLOOR/CHGROUND) — for each cell in the viewport
+4. Objects lower part (CHOBJECT) — overlaid on top of floors
+5. Characters — Blupi and enemies (CHBLUPI) with correct Z-order
+6. Highlight overlays (CHHILI) — selection boxes, action indicators
+7. Objects upper part (CHOBJECTo) — parts of objects that overlap the cell above
+8. Fog (CHFOG) — overlays everything in hidden cells
+9. HUD elements — gauges (CHJAUGE), buttons (CHBUTTON), text (CHTEXT/CHLITTLE)
+10. Mouse cursor (SPRITE_*) — always on top
+</code></pre>
+<hr />
+<h2 id="coordinate-system">Coordinate System</h2>
+<p>The game uses a "diamond" isometric projection:</p>
+<pre><code>Grid cell → screen pixel (ConvCelToPos):
+  px = (cel.x - celCoin.x) * DIMCELX/2
+     - (cel.y - celCoin.y) * DIMCELX/2
+     + POSDRAWX + DIMDRAWX/2
+  py = (cel.x - celCoin.x) * DIMCELY/2
+     + (cel.y - celCoin.y) * DIMCELY/2
+     + POSDRAWY
+
+Screen pixel → grid cell (ConvPosToCel): inverse of the above.
+
+ConvPosToCel2(pos): alternative conversion for the editor.
+</code></pre>
+<p><code>SHIFTBLUPIY=5</code> shifts Blupi 5 pixels upward for correct Z-order visual effect
+(the character appears to stand on the surface of the cell).</p>
+<hr />
+<h2 id="highlight-icons-chhili-channel-5">Highlight Icons (CHHILI, channel 5)</h2>
+<table>
+<thead>
+<tr>
+<th>Icon index</th>
+<th>Constant</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>112</td>
+<td><code>ICON_HILI_STAT</code></td>
+<td>Statistics highlight</td>
+</tr>
+<tr>
+<td>113</td>
+<td><code>ICON_HILI_SEL</code></td>
+<td>Character is selected</td>
+</tr>
+<tr>
+<td>114</td>
+<td><code>ICON_HILI_ANY</code></td>
+<td>General hover</td>
+</tr>
+<tr>
+<td>115</td>
+<td><code>ICON_HILI_OP</code></td>
+<td>Operation is available</td>
+</tr>
+<tr>
+<td>117</td>
+<td><code>ICON_HILI_GO</code></td>
+<td>Movement target</td>
+</tr>
+<tr>
+<td>118</td>
+<td><code>ICON_HILI_BUILD</code></td>
+<td>Build location</td>
+</tr>
+<tr>
+<td>119</td>
+<td><code>ICON_HILI_ERR</code></td>
+<td>Error (action not possible)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="blp-image-format">BLP Image Format</h2>
+<p>Files with <code>.blp</code> extension in <code>image/</code> are Epsitec's proprietary palette-based
+bitmap format (BLP = Blupi image Package). Each file contains:
+- A 256-colour palette
+- A sequence of named "icons" (frame sprites)
+- Each icon has its own dimensions and pixel data (8-bit indexed)</p>
+<p>Loading is handled by <code>CPixmap::Cache()</code> (via <code>SDL_image</code> in the cross-platform build).</p>
+</main>
+<script>
+// Highlight active nav link also by current URL
+(function(){
+  var links = document.querySelectorAll('#sidebar a.nav-link');
+  var cur = window.location.pathname.split('/').pop() || 'index.html';
+  links.forEach(function(a){
+    if(a.getAttribute('href').split('/').pop() === cur) a.classList.add('active');
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Task Interpreter (GOAL_*) — Planet Blupi Docs</title>
+<style>
+
+:root {
+    --bg:        #0d1117;
+    --sidebar-bg:#161b22;
+    --border:    #30363d;
+    --text:      #c9d1d9;
+    --heading:   #e6edf3;
+    --link:      #58a6ff;
+    --link-hover:#79c0ff;
+    --code-bg:   #161b22;
+    --code-text: #f0f6fc;
+    --pre-bg:    #161b22;
+    --table-hd:  #21262d;
+    --table-alt: #161b22;
+    --accent:    #f78166;
+    --sidebar-w: 280px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ── Sidebar ─────────────────────────────────────────── */
+#sidebar {
+    width: var(--sidebar-w);
+    min-width: var(--sidebar-w);
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 0 0 2rem 0;
+    flex-shrink: 0;
+}
+
+#sidebar .logo {
+    display: block;
+    padding: 1rem 1rem 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--heading);
+    letter-spacing: 0.02em;
+}
+#sidebar .logo span { color: var(--accent); }
+
+#sidebar nav { padding: 0.5rem 0; }
+
+#sidebar .section-title {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6e7681;
+    padding: 0.85rem 1rem 0.2rem 1rem;
+}
+
+#sidebar a.nav-link {
+    display: block;
+    padding: 0.28rem 1rem 0.28rem 1.3rem;
+    font-size: 0.83rem;
+    color: #8b949e;
+    text-decoration: none;
+    border-left: 2px solid transparent;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+#sidebar a.nav-link:hover {
+    color: var(--link-hover);
+    background: rgba(88,166,255,0.06);
+    border-left-color: var(--link);
+}
+#sidebar a.nav-link.active {
+    color: var(--link);
+    border-left-color: var(--accent);
+    background: rgba(247,129,102,0.08);
+    font-weight: 600;
+}
+#sidebar a.nav-link.top-link {
+    font-size: 0.85rem;
+    color: #adbac7;
+    padding-left: 1rem;
+    font-weight: 600;
+}
+
+/* ── Main content ────────────────────────────────────── */
+#main {
+    flex: 1;
+    min-width: 0;
+    padding: 2.5rem 3rem 4rem 3rem;
+    max-width: 960px;
+}
+
+/* ── Breadcrumb ──────────────────────────────────────── */
+.breadcrumb {
+    font-size: 0.78rem;
+    color: #6e7681;
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    align-items: center;
+}
+.breadcrumb a { color: var(--link); text-decoration: none; }
+.breadcrumb a:hover { text-decoration: underline; }
+.breadcrumb .sep { color: #6e7681; }
+
+/* ── Typography ──────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--heading);
+    font-weight: 600;
+    line-height: 1.3;
+    margin-top: 1.8em;
+    margin-bottom: 0.6em;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.3em;
+}
+h1 { font-size: 1.9rem; margin-top: 0; }
+h2 { font-size: 1.4rem; }
+h3 { font-size: 1.15rem; border-bottom: none; }
+h4 { font-size: 1rem; border-bottom: none; color: var(--text); }
+
+p { margin: 0.75em 0; }
+
+a { color: var(--link); text-decoration: none; }
+a:hover { text-decoration: underline; color: var(--link-hover); }
+
+ul, ol { padding-left: 1.5em; margin: 0.5em 0; }
+li { margin: 0.25em 0; }
+
+/* ── Code ────────────────────────────────────────────── */
+code {
+    background: var(--code-bg);
+    color: var(--code-text);
+    padding: 0.15em 0.45em;
+    border-radius: 4px;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 0.85em;
+    border: 1px solid var(--border);
+}
+
+pre {
+    background: var(--pre-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1em 1.2em;
+    overflow-x: auto;
+    margin: 1em 0;
+    line-height: 1.55;
+}
+pre code {
+    background: transparent;
+    border: none;
+    padding: 0;
+    font-size: 0.83rem;
+    color: #e6edf3;
+}
+
+/* ── Tables ──────────────────────────────────────────── */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+    font-size: 0.88rem;
+    overflow-x: auto;
+    display: block;
+}
+thead tr { background: var(--table-hd); }
+th {
+    border: 1px solid var(--border);
+    padding: 0.5em 0.85em;
+    text-align: left;
+    color: var(--heading);
+    font-weight: 600;
+    white-space: nowrap;
+}
+td {
+    border: 1px solid var(--border);
+    padding: 0.45em 0.85em;
+    vertical-align: top;
+}
+tbody tr:nth-child(even) { background: var(--table-alt); }
+tbody tr:hover { background: #1c2128; }
+
+/* ── Blockquote ──────────────────────────────────────── */
+blockquote {
+    border-left: 3px solid var(--accent);
+    margin: 1em 0;
+    padding: 0.5em 1em;
+    background: rgba(247,129,102,0.07);
+    border-radius: 0 4px 4px 0;
+    color: #adbac7;
+    font-style: italic;
+}
+
+/* ── HR ──────────────────────────────────────────────── */
+hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2em 0;
+}
+
+/* ── Responsive ──────────────────────────────────────── */
+@media (max-width: 768px) {
+    body { flex-direction: column; }
+    #sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+    #main { padding: 1.5rem 1.2rem 3rem 1.2rem; }
+}
+
+/* ── Scroll ──────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: #30363d; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #484f58; }
+
+</style>
+</head>
+<body>
+<aside id="sidebar">
+  <a class="logo" href="../index.html">
+    <span>&#9679;</span> Planet Blupi Docs
+  </a>
+  <nav>
+<a class="nav-link top-link" href="../index.html">&#8962; Index</a>
+<span class="section-title">Overview</span>
+<a class="nav-link " href="../overview.html">Overview</a>
+<a class="nav-link " href="../history.html">History & Speedy Blupi</a>
+<span class="section-title">Architecture</span>
+<a class="nav-link " href="../architecture/overview.html">System Architecture</a>
+<a class="nav-link " href="../architecture/source-files.html">Source Files Reference</a>
+<span class="section-title">Engine Internals</span>
+<a class="nav-link " href="../engine/data-structures.html">Data Structures</a>
+<a class="nav-link " href="../engine/game-phases.html">Game Phases</a>
+<a class="nav-link " href="../engine/rendering.html">Rendering</a>
+<a class="nav-link " href="../engine/pathfinding.html">Pathfinding (A*)</a>
+<a class="nav-link " href="../engine/fog-of-war.html">Fog of War</a>
+<a class="nav-link " href="../engine/minimap.html">Minimap</a>
+<a class="nav-link " href="../engine/demo.html">Demo Recording</a>
+<a class="nav-link " href="../engine/undo.html">Undo System</a>
+<span class="section-title">World (Map)</span>
+<a class="nav-link " href="../world/file-format.html">World File Format</a>
+<a class="nav-link " href="../world/grid.html">World Grid</a>
+<a class="nav-link " href="../world/terrain.html">Terrain & Auto-tiling</a>
+<a class="nav-link " href="../world/objects.html">Object Layer</a>
+<span class="section-title">Characters</span>
+<a class="nav-link " href="overview.html">Character Overview</a>
+<a class="nav-link " href="blupi.html">Player (Blupi)</a>
+<a class="nav-link " href="enemies.html">Enemies</a>
+<a class="nav-link " href="vehicles.html">Vehicles</a>
+<a class="nav-link " href="actions.html">ACTION_* Codes</a>
+<a class="nav-link active" href="goals.html">GOAL_* Interpreter</a>
+<span class="section-title">Gameplay</span>
+<a class="nav-link " href="../gameplay/win-conditions.html">Win Conditions</a>
+<a class="nav-link " href="../gameplay/toolbar.html">Toolbar Buttons</a>
+<a class="nav-link " href="../gameplay/directions.html">Directions</a>
+<a class="nav-link " href="../gameplay/skill-levels.html">Skill Levels</a>
+<a class="nav-link " href="../gameplay/regions.html">Regions / Themes</a>
+<a class="nav-link " href="../gameplay/cheat-codes.html">Cheat Codes</a>
+<span class="section-title">Assets</span>
+<a class="nav-link " href="../assets/images.html">Image Assets</a>
+<a class="nav-link " href="../assets/sounds.html">Sound Effects</a>
+<a class="nav-link " href="../assets/music.html">Music Tracks</a>
+<a class="nav-link " href="../assets/data-files.html">Data Files</a>
+<a class="nav-link " href="../assets/movies.html">Movies</a>
+<span class="section-title">User Interface</span>
+<a class="nav-link " href="../ui/messages.html">Windows Messages</a>
+<a class="nav-link " href="../ui/cursor-sprites.html">Cursor Sprites</a>
+<a class="nav-link " href="../ui/statistics.html">Statistics Panel</a>
+<a class="nav-link " href="../ui/error-codes.html">Error Codes</a>
+<span class="section-title">Platforms</span>
+<a class="nav-link " href="../platform/build.html">Build System</a>
+<a class="nav-link " href="../platform/config.html">Configuration</a>
+<a class="nav-link " href="../platform/localisation.html">Localisation</a>
+<a class="nav-link " href="../platform/web.html">Web / Emscripten</a>
+<span class="section-title">Speedy Blupi Reference</span>
+<a class="nav-link " href="../speedy-blupi/overview.html">Relation to Speedy Blupi</a>
+<a class="nav-link " href="../speedy-blupi/actions-h.html">actions.h Reference</a>
+</nav>
+</aside>
+<main id="main">
+  <div class="breadcrumb"><a href="../index.html">Home</a> <span class="sep">/</span> <span>Characters</span> <span class="sep">/</span> <span>Goals</span></div>
+  <h1 id="task-interpreter-goal_">Task Interpreter (GOAL_*)</h1>
+<h2 id="overview">Overview</h2>
+<p>High-level multi-step tasks are encoded as sequences of <strong>GOAL_* opcodes</strong>
+stored in static tables in <code>src/decgoal.cpp</code>.
+The interpreter in <code>CDecor::GoalNextOp()</code> executes one opcode per game tick.</p>
+<p>Each task (WM_ACTION_<em>) maps to a table of GOAL_</em> opcodes via <code>GetTableGoal()</code>.</p>
+<hr />
+<h2 id="how-the-interpreter-works">How the Interpreter Works</h2>
+<pre><code>1. Player clicks → WM_ACTION_* message sent
+2. CEvent::EventButton() → BlupiGoal(cel, button)
+3. GoalStart(rank, action, cel) → sets goalAction, goalPhase=0, goalCel
+4. Each tick: BlupiNextGoal(rank) → GoalNextOp(rank, pTable)
+5. GoalNextOp reads next opcode from table:
+   - Executes it immediately if possible
+   - Or waits for a prerequisite (animation finish, cell free, etc.)
+6. When GOAL_TERM is reached → character becomes idle
+</code></pre>
+<hr />
+<h2 id="goal_-opcode-reference">GOAL_* Opcode Reference</h2>
+<p>Defined in <code>include/decgoal.h</code>. Parameter counts in <code>table_goal_nbop[]</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Opcode</th>
+<th>Code</th>
+<th>Param count</th>
+<th>Parameters</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GOAL_TERM</code></td>
+<td>0</td>
+<td>0</td>
+<td>—</td>
+<td>End of goal sequence</td>
+</tr>
+<tr>
+<td><code>GOAL_GOHILI</code></td>
+<td>1</td>
+<td>3</td>
+<td>dx,dy, bPass</td>
+<td>Move to highlighted cell (relative offset)</td>
+</tr>
+<tr>
+<td><code>GOAL_GOHILI2</code></td>
+<td>2</td>
+<td>3</td>
+<td>dx,dy, bPass</td>
+<td>Move to highlighted cell (alternative variant)</td>
+</tr>
+<tr>
+<td><code>GOAL_GOBLUPI</code></td>
+<td>3</td>
+<td>3</td>
+<td>dx,dy, bPass</td>
+<td>Move character to cell (absolute from goalCel)</td>
+</tr>
+<tr>
+<td><code>GOAL_PUTFLOOR</code></td>
+<td>4</td>
+<td>4</td>
+<td>dx,dy, ch,icon</td>
+<td>Place a floor tile at cell</td>
+</tr>
+<tr>
+<td><code>GOAL_PUTOBJECT</code></td>
+<td>5</td>
+<td>4</td>
+<td>dx,dy, ch,icon</td>
+<td>Place an object tile at cell</td>
+</tr>
+<tr>
+<td><code>GOAL_BUILDFLOOR</code></td>
+<td>6</td>
+<td>9</td>
+<td>dx,dy, ch,i, mch,mi, total,delai,step</td>
+<td>Animate floor construction (Move element)</td>
+</tr>
+<tr>
+<td><code>GOAL_BUILDOBJECT</code></td>
+<td>7</td>
+<td>9</td>
+<td>dx,dy, ch,i, mch,mi, total,delai,step</td>
+<td>Animate object construction (Move element)</td>
+</tr>
+<tr>
+<td><code>GOAL_ACTION</code></td>
+<td>8</td>
+<td>2</td>
+<td>action, direction</td>
+<td>Play an animation action</td>
+</tr>
+<tr>
+<td><code>GOAL_INTERRUPT</code></td>
+<td>9</td>
+<td>1</td>
+<td>level</td>
+<td>Set interrupt priority (0=highest, interrupts ongoing actions)</td>
+</tr>
+<tr>
+<td><code>GOAL_ENERGY</code></td>
+<td>10</td>
+<td>1</td>
+<td>minimum</td>
+<td>Require minimum energy to proceed</td>
+</tr>
+<tr>
+<td><code>GOAL_ADDMOVES</code></td>
+<td>11</td>
+<td>3</td>
+<td>dx,dy, rank</td>
+<td>Add movement animation to decoration table</td>
+</tr>
+<tr>
+<td><code>GOAL_OTHER</code></td>
+<td>12</td>
+<td>6</td>
+<td>ch,f1,l1, f2,l2, action</td>
+<td>Execute action on a nearby matching object</td>
+</tr>
+<tr>
+<td><code>GOAL_FINISHMOVE</code></td>
+<td>13</td>
+<td>0</td>
+<td>—</td>
+<td>Wait for Move animation to finish</td>
+</tr>
+<tr>
+<td><code>GOAL_TAKE</code></td>
+<td>14</td>
+<td>2</td>
+<td>dx,dy</td>
+<td>Pick up the object at cell (dx,dy)</td>
+</tr>
+<tr>
+<td><code>GOAL_DEPOSE</code></td>
+<td>15</td>
+<td>0</td>
+<td>—</td>
+<td>Put down the currently carried object</td>
+</tr>
+<tr>
+<td><code>GOAL_GROUP</code></td>
+<td>16</td>
+<td>1</td>
+<td>nb</td>
+<td>Group action: next nb opcodes apply to multiple Blupi</td>
+</tr>
+<tr>
+<td><code>GOAL_WORK</code></td>
+<td>17</td>
+<td>2</td>
+<td>dx,dy</td>
+<td>Mark cell (dx,dy) as current workspace</td>
+</tr>
+<tr>
+<td><code>GOAL_TESTOBJECT</code></td>
+<td>18</td>
+<td>4</td>
+<td>dx,dy, ch,icon</td>
+<td>Test if object at cell matches channel+icon</td>
+</tr>
+<tr>
+<td><code>GOAL_FIX</code></td>
+<td>19</td>
+<td>2</td>
+<td>dx,dy</td>
+<td>Set fixed reference point (for bridge/cultivate)</td>
+</tr>
+<tr>
+<td><code>GOAL_OTHERFIX</code></td>
+<td>20</td>
+<td>6</td>
+<td>ch,f1,l1, f2,l2, action</td>
+<td>Like GOAL_OTHER but relative to fix point</td>
+</tr>
+<tr>
+<td><code>GOAL_ADDICONS</code></td>
+<td>21</td>
+<td>3</td>
+<td>dx,dy, rank</td>
+<td>Add icon sequence animation to decoration</td>
+</tr>
+<tr>
+<td><code>GOAL_NEWBLUPI</code></td>
+<td>22</td>
+<td>2</td>
+<td>dx,dy</td>
+<td>Create a new Blupi at cell (dx,dy)</td>
+</tr>
+<tr>
+<td><code>GOAL_SOUND</code></td>
+<td>23</td>
+<td>1</td>
+<td>sound</td>
+<td>Play SOUND_* effect</td>
+</tr>
+<tr>
+<td><code>GOAL_REPEAT</code></td>
+<td>24</td>
+<td>1</td>
+<td>bool</td>
+<td>Enable (1) or disable (0) action repeating</td>
+</tr>
+<tr>
+<td><code>GOAL_OTHERLOOP</code></td>
+<td>25</td>
+<td>1</td>
+<td>action</td>
+<td>Loop action until a target matching <code>action</code> is found</td>
+</tr>
+<tr>
+<td><code>GOAL_NEXTLOOP</code></td>
+<td>26</td>
+<td>0</td>
+<td>—</td>
+<td>Advance the loop counter</td>
+</tr>
+<tr>
+<td><code>GOAL_ARRANGEOBJECT</code></td>
+<td>27</td>
+<td>2</td>
+<td>dx,dy</td>
+<td>Call ArrangeObject at cell (for auto-tiling after build)</td>
+</tr>
+<tr>
+<td><code>GOAL_LABO</code></td>
+<td>28</td>
+<td>0</td>
+<td>—</td>
+<td>Laboratory work step</td>
+</tr>
+<tr>
+<td><code>GOAL_CACHE</code></td>
+<td>29</td>
+<td>2</td>
+<td>bool, bDynamite</td>
+<td>Hide (1) or show (0) the Blupi sprite</td>
+</tr>
+<tr>
+<td><code>GOAL_DELETE</code></td>
+<td>30</td>
+<td>0</td>
+<td>—</td>
+<td>Delete this character</td>
+</tr>
+<tr>
+<td><code>GOAL_ELECTRO</code></td>
+<td>31</td>
+<td>3</td>
+<td>dx,dy, rank</td>
+<td>Fire an electro ray from Blupi toward cell</td>
+</tr>
+<tr>
+<td><code>GOAL_NEWPERSO</code></td>
+<td>32</td>
+<td>3</td>
+<td>dx,dy, perso</td>
+<td>Spawn a new entity (enemy or ally) at cell</td>
+</tr>
+<tr>
+<td><code>GOAL_USINEBUILD</code></td>
+<td>33</td>
+<td>2</td>
+<td>dx,dy</td>
+<td>Factory build step (IsUsineBuild check)</td>
+</tr>
+<tr>
+<td><code>GOAL_USINEFREE</code></td>
+<td>34</td>
+<td>2</td>
+<td>dx,dy</td>
+<td>Factory free step (IsUsineFree check)</td>
+</tr>
+<tr>
+<td><code>GOAL_EXPLOSE1</code></td>
+<td>35</td>
+<td>2</td>
+<td>dx,dy</td>
+<td>Explosion animation — phase 1</td>
+</tr>
+<tr>
+<td><code>GOAL_EXPLOSE2</code></td>
+<td>36</td>
+<td>2</td>
+<td>dx,dy</td>
+<td>Explosion animation — phase 2</td>
+</tr>
+<tr>
+<td><code>GOAL_VEHICULE</code></td>
+<td>37</td>
+<td>1</td>
+<td>type</td>
+<td>Enter (type&gt;0) or exit (type=0) a vehicle</td>
+</tr>
+<tr>
+<td><code>GOAL_TAKEOBJECT</code></td>
+<td>38</td>
+<td>4</td>
+<td>dx,dy, ch,icon</td>
+<td>Pick up a specific object (channel+icon) at cell</td>
+</tr>
+<tr>
+<td><code>GOAL_FLOORJUMP</code></td>
+<td>39</td>
+<td>3</td>
+<td>ch,icon, action</td>
+<td>Branch based on floor type at current cell</td>
+</tr>
+<tr>
+<td><code>GOAL_ADDDRAPEAU</code></td>
+<td>40</td>
+<td>2</td>
+<td>dx,dy</td>
+<td>Add a flag (waypoint) to the path list</td>
+</tr>
+<tr>
+<td><code>GOAL_AMORCE</code></td>
+<td>41</td>
+<td>2</td>
+<td>dx,dy</td>
+<td>Prime mine detonator at cell</td>
+</tr>
+<tr>
+<td><code>GOAL_MALADE</code></td>
+<td>42</td>
+<td>1</td>
+<td>bMalade</td>
+<td>Set sick / poisoned state (1=sick, 0=recover)</td>
+</tr>
+<tr>
+<td><code>GOAL_IFTERM</code></td>
+<td>43</td>
+<td>2</td>
+<td>dx,dy</td>
+<td>Conditional: skip next opcode if at target cell</td>
+</tr>
+<tr>
+<td><code>GOAL_IFDEBARQUE</code></td>
+<td>44</td>
+<td>2</td>
+<td>dx,dy</td>
+<td>Conditional: skip if disembarking</td>
+</tr>
+<tr>
+<td><code>GOAL_ISNOMALADE</code></td>
+<td>45</td>
+<td>0</td>
+<td>—</td>
+<td>Assert: character must not be sick to proceed</td>
+</tr>
+<tr>
+<td><code>GOAL_SKIPSKILL</code></td>
+<td>46</td>
+<td>2</td>
+<td>skill,d</td>
+<td>Skip d opcodes if current skill level matches</td>
+</tr>
+<tr>
+<td><code>GOAL_TELEPORTE</code></td>
+<td>47</td>
+<td>2</td>
+<td>dx,dy</td>
+<td>Teleport Blupi to partner teleporter</td>
+</tr>
+<tr>
+<td><code>GOAL_ACTUALISE</code></td>
+<td>48</td>
+<td>0</td>
+<td>—</td>
+<td>Refresh character sprite (BlupiActualise)</td>
+</tr>
+<tr>
+<td><code>GOAL_WAITFREE</code></td>
+<td>49</td>
+<td>2</td>
+<td>dx,dy</td>
+<td>Wait until target cell is free (not occupied)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="wm_action_-to-goal-table-mapping">WM_ACTION_* to Goal Table Mapping</h2>
+<p>Each <code>WM_ACTION_*</code> message corresponds to a named goal table in <code>decgoal.cpp</code>.
+<code>GetTableGoal(action)</code> returns a pointer to the opcode table.</p>
+<table>
+<thead>
+<tr>
+<th>WM_ACTION_*</th>
+<th>Value (WM_USER+)</th>
+<th>Goal table</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>WM_ACTION_GO</code></td>
+<td>+30</td>
+<td><code>table_goal_go</code></td>
+<td>Move Blupi to target cell</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_ABAT1</code></td>
+<td>+31</td>
+<td><code>table_goal_abat1</code></td>
+<td>Chop tree (with replant)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_ABAT2</code></td>
+<td>+32</td>
+<td><code>table_goal_abat2</code></td>
+<td>Chop tree variant</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_ABAT3</code></td>
+<td>+33</td>
+<td><code>table_goal_abat3</code></td>
+<td>Chop tree variant</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_ABAT4</code></td>
+<td>+34</td>
+<td><code>table_goal_abat4</code></td>
+<td>Chop tree variant</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_ABAT5</code></td>
+<td>+35</td>
+<td><code>table_goal_abat5</code></td>
+<td>Chop tree (no replant)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_ABAT6</code></td>
+<td>+36</td>
+<td><code>table_goal_abat6</code></td>
+<td>Chop tree variant</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_BUILD1</code></td>
+<td>+37</td>
+<td><code>table_goal_build1</code></td>
+<td>Build construction type 1 (hut)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_BUILD2</code></td>
+<td>+38</td>
+<td><code>table_goal_build2</code></td>
+<td>Build construction type 2 (laboratory)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_BUILD3</code></td>
+<td>+39</td>
+<td><code>table_goal_build3</code></td>
+<td>Build construction type 3 (factory)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_BUILD4</code></td>
+<td>+40</td>
+<td><code>table_goal_build4</code></td>
+<td>Build construction type 4 (incubator)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_BUILD5</code></td>
+<td>+41</td>
+<td><code>table_goal_build5</code></td>
+<td>Build construction type 5</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_BUILD6</code></td>
+<td>+42</td>
+<td><code>table_goal_build6</code></td>
+<td>Build construction type 6</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_STOP</code></td>
+<td>+43</td>
+<td><code>table_goal_stop</code></td>
+<td>Stop character</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_CARRY</code></td>
+<td>+44</td>
+<td><code>table_goal_carry</code></td>
+<td>Pick up object</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_DEPOSE</code></td>
+<td>+45</td>
+<td><code>table_goal_depose</code></td>
+<td>Put down object</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_ROC1</code></td>
+<td>+46</td>
+<td><code>table_goal_roc1</code></td>
+<td>Mine rock (variant 1)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_ROC2</code></td>
+<td>+47</td>
+<td><code>table_goal_roc2</code></td>
+<td>Mine rock (variant 2)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_ROC3</code></td>
+<td>+48</td>
+<td><code>table_goal_roc3</code></td>
+<td>Mine rock (variant 3)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_ROC4</code></td>
+<td>+49</td>
+<td><code>table_goal_roc4</code></td>
+<td>Mine rock (variant 4)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_ROC5</code></td>
+<td>+50</td>
+<td><code>table_goal_roc5</code></td>
+<td>Mine rock (variant 5)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_ROC6</code></td>
+<td>+51</td>
+<td><code>table_goal_roc6</code></td>
+<td>Mine rock (variant 6)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_ROC7</code></td>
+<td>+52</td>
+<td><code>table_goal_roc7</code></td>
+<td>Mine rock (variant 7)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_MUR</code></td>
+<td>+53</td>
+<td><code>table_goal_mur</code></td>
+<td>Build wall</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_CULTIVE</code></td>
+<td>+54</td>
+<td><code>table_goal_cultive</code></td>
+<td>Cultivate / tend crops</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_CULTIVE2</code></td>
+<td>+55</td>
+<td><code>table_goal_cultive2</code></td>
+<td>Cultivate variant</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_MANGE</code></td>
+<td>+56</td>
+<td><code>table_goal_mange</code></td>
+<td>Eat food</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_MAKE</code></td>
+<td>+57</td>
+<td><code>table_goal_make</code></td>
+<td>Generic make/craft</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_BUILD</code></td>
+<td>+58</td>
+<td><code>table_goal_build</code></td>
+<td>Generic build</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_PALIS</code></td>
+<td>+59</td>
+<td><code>table_goal_palis</code></td>
+<td>Build palisade / fence</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_NEWBLUPI</code></td>
+<td>+60</td>
+<td><code>table_goal_newblupi</code></td>
+<td>Hatch a new Blupi from egg</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_PONTE</code></td>
+<td>+61</td>
+<td><code>table_goal_ponte</code></td>
+<td>Build bridge (east)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_PONTS</code></td>
+<td>+62</td>
+<td><code>table_goal_ponts</code></td>
+<td>Build bridge (south)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_PONTO</code></td>
+<td>+63</td>
+<td><code>table_goal_ponto</code></td>
+<td>Build bridge (west)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_PONTN</code></td>
+<td>+64</td>
+<td><code>table_goal_pontn</code></td>
+<td>Build bridge (north)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_PONTEL</code></td>
+<td>+65</td>
+<td><code>table_goal_pontel</code></td>
+<td>Build bridge (east, long)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_PONTSL</code></td>
+<td>+66</td>
+<td><code>table_goal_pontsl</code></td>
+<td>Build bridge (south, long)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_PONTOL</code></td>
+<td>+67</td>
+<td><code>table_goal_pontol</code></td>
+<td>Build bridge (west, long)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_PONTNL</code></td>
+<td>+68</td>
+<td><code>table_goal_pontnl</code></td>
+<td>Build bridge (north, long)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_TOUR</code></td>
+<td>+69</td>
+<td><code>table_goal_tour</code></td>
+<td>Build watchtower</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_CARRY2</code></td>
+<td>+70</td>
+<td><code>table_goal_carry2</code></td>
+<td>Pick up object (variant 2)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_DEPOSE2</code></td>
+<td>+71</td>
+<td><code>table_goal_depose2</code></td>
+<td>Put down object (variant 2)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_MANGE2</code></td>
+<td>+72</td>
+<td><code>table_goal_mange2</code></td>
+<td>Eat (variant 2)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_BOIT</code></td>
+<td>+73</td>
+<td><code>table_goal_boit</code></td>
+<td>Drink potion</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_BOIT2</code></td>
+<td>+74</td>
+<td><code>table_goal_boit2</code></td>
+<td>Drink variant 2</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_LABO</code></td>
+<td>+75</td>
+<td><code>table_goal_labo</code></td>
+<td>Use laboratory</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_FLEUR1</code></td>
+<td>+76</td>
+<td><code>table_goal_fleur1</code></td>
+<td>Pick flowers (variant 1)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_FLEUR2</code></td>
+<td>+77</td>
+<td><code>table_goal_fleur2</code></td>
+<td>Pick flowers (variant 2)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_DYNAMITE</code></td>
+<td>+78</td>
+<td><code>table_goal_dynamite</code></td>
+<td>Place and detonate dynamite</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_DYNAMITE2</code></td>
+<td>+79</td>
+<td><code>table_goal_dynamite2</code></td>
+<td>Dynamite variant 2</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_T_DYNAMITE</code></td>
+<td>+80</td>
+<td><code>table_goal_t_dynamite</code></td>
+<td>Tracks dynamite</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_FLEUR3</code></td>
+<td>+81</td>
+<td><code>table_goal_fleur3</code></td>
+<td>Pick flowers (variant 3)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_R_BUILD1</code>–<code>R_BUILD6</code></td>
+<td>+82–+90</td>
+<td>robot build tables</td>
+<td>Robot building actions</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_R_MAKE1</code>–<code>R_MAKE6</code></td>
+<td>+86–+91</td>
+<td>robot make tables</td>
+<td>Robot manufacturing</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_BATEAUE</code></td>
+<td>+92</td>
+<td><code>table_goal_bateaue</code></td>
+<td>Boat: move east</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_BATEAUS</code></td>
+<td>+93</td>
+<td><code>table_goal_bateaus</code></td>
+<td>Boat: move south</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_BATEAUO</code></td>
+<td>+94</td>
+<td><code>table_goal_bateauo</code></td>
+<td>Boat: move west</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_BATEAUN</code></td>
+<td>+95</td>
+<td><code>table_goal_bateaun</code></td>
+<td>Boat: move north</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_BATEAUDE</code></td>
+<td>+96</td>
+<td>boat disembark east</td>
+<td>Disembark east</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_BATEAUDS</code></td>
+<td>+97</td>
+<td>boat disembark south</td>
+<td>Disembark south</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_BATEAUDO</code></td>
+<td>+98</td>
+<td>boat disembark west</td>
+<td>Disembark west</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_BATEAUDN</code></td>
+<td>+99</td>
+<td>boat disembark north</td>
+<td>Disembark north</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_BATEAUAE</code></td>
+<td>+100</td>
+<td>boat embark east</td>
+<td>Embark east</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_BATEAUAS</code></td>
+<td>+101</td>
+<td>boat embark south</td>
+<td>Embark south</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_BATEAUAO</code></td>
+<td>+102</td>
+<td>boat embark west</td>
+<td>Embark west</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_BATEAUAN</code></td>
+<td>+103</td>
+<td>boat embark north</td>
+<td>Embark north</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_MJEEP</code></td>
+<td>+104</td>
+<td><code>table_goal_mjeep</code></td>
+<td>Board jeep</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_DJEEP</code></td>
+<td>+105</td>
+<td><code>table_goal_djeep</code></td>
+<td>Disembark from jeep</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_DRAPEAU</code></td>
+<td>+106</td>
+<td><code>table_goal_drapeau</code></td>
+<td>Place a flag (waypoint)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_DRAPEAU2</code></td>
+<td>+107</td>
+<td><code>table_goal_drapeau2</code></td>
+<td>Flag variant 2</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_DRAPEAU3</code></td>
+<td>+108</td>
+<td><code>table_goal_drapeau3</code></td>
+<td>Flag variant 3</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_EXTRAIT</code></td>
+<td>+109</td>
+<td><code>table_goal_extrait</code></td>
+<td>Extract iron ore</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_FABJEEP</code></td>
+<td>+110</td>
+<td><code>table_goal_fabjeep</code></td>
+<td>Manufacture a jeep</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_FABMINE</code></td>
+<td>+111</td>
+<td><code>table_goal_fabmine</code></td>
+<td>Manufacture a mine</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_MINE</code></td>
+<td>+112</td>
+<td><code>table_goal_mine</code></td>
+<td>Detonate mine</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_MINE2</code></td>
+<td>+113</td>
+<td><code>table_goal_mine2</code></td>
+<td>Mine variant 2</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_E_RAYON</code></td>
+<td>+116</td>
+<td><code>table_goal_e_rayon</code></td>
+<td>Electro tower fire ray</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_ELECTRO</code></td>
+<td>+117</td>
+<td><code>table_goal_electro</code></td>
+<td>Blupi electrocuted</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_ELECTROm</code></td>
+<td>+118</td>
+<td><code>table_goal_electrom</code></td>
+<td>Electro mine</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_GRILLE</code></td>
+<td>+119</td>
+<td><code>table_goal_grille</code></td>
+<td>Electro grill effect</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_MAISON</code></td>
+<td>+120</td>
+<td><code>table_goal_maison</code></td>
+<td>Go home (into hut)</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_FABDISC</code></td>
+<td>+121</td>
+<td><code>table_goal_fabdisc</code></td>
+<td>Create a disciple</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_A_MORT</code></td>
+<td>+122</td>
+<td><code>table_goal_a_mort</code></td>
+<td>Spider death</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_REPEAT</code></td>
+<td>+123</td>
+<td><code>table_goal_repeat</code></td>
+<td>Repeat last action</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_TELEPORTE00</code>–<code>11</code></td>
+<td>+124–+127</td>
+<td>teleporter tables</td>
+<td>Teleport sequences</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_FABARMURE</code></td>
+<td>+128</td>
+<td><code>table_goal_fabarmure</code></td>
+<td>Manufacture armour</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_MARMURE</code></td>
+<td>+129</td>
+<td><code>table_goal_marmure</code></td>
+<td>Enter armour</td>
+</tr>
+<tr>
+<td><code>WM_ACTION_DARMURE</code></td>
+<td>+130</td>
+<td><code>table_goal_darmure</code></td>
+<td>Exit armour</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="example-goal-sequence-table_goal_go">Example Goal Sequence: <code>table_goal_go</code></h2>
+<pre><code class="language-cpp">static short table_goal_go[] =
+{
+    WM_ACTION_GO,          // header: action this table serves
+        GOAL_GOHILI, 0,0, FALSE,   // move to highlighted cell (+0,+0)
+        GOAL_TERM,         // done
+    0                      // sentinel
+};
+</code></pre>
+<h2 id="example-goal-sequence-table_goal_maison-go-home">Example Goal Sequence: <code>table_goal_maison</code> (Go Home)</h2>
+<pre><code class="language-cpp">static short table_goal_maison[] =
+{
+    WM_ACTION_MAISON,
+        GOAL_GOHILI2, +1,+1, FALSE,           // move to cell adjacent to hut
+        GOAL_ACTION,  ACTION_STOP, DIRECT_E,  // face east
+        GOAL_ACTION,  ACTION_CONTENT, DIRECT_E, // happy dance
+        GOAL_TERM,
+    0
+};
+</code></pre>
+<h2 id="example-goal-sequence-table_goal_abat1-chop-tree">Example Goal Sequence: <code>table_goal_abat1</code> (Chop Tree)</h2>
+<pre><code class="language-cpp">static short table_goal_abat1[] =
+{
+    WM_ACTION_ABAT1,
+        GOAL_ENERGY,     MAXENERGY/4,           // require 25% energy
+        GOAL_GOHILI2,    0,+1, TRUE,             // move adjacent to tree
+        GOAL_GROUP,      4,                      // group of 4 opcodes:
+         GOAL_TESTOBJECT, 0,-1, CHOBJECT,6,      //   test: tree is there
+         GOAL_INTERRUPT,  0,                     //   set high priority
+         GOAL_WORK,       0,-1,                  //   claim workspace
+         GOAL_BUILDOBJECT,0,-1, CHOBJECT,30, -1,-1, DIMOBJY+20,1,-1*100, // animate
+        GOAL_ACTION,     ACTION_STOP, DIRECT_E,
+        GOAL_ADDMOVES,   0,-1, 1,                // add falling animation
+        GOAL_ACTION,     ACTION_PIOCHESOURD, DIRECT_E,
+        GOAL_GOBLUPI,    0,-1, TRUE,             // move to tree position
+        GOAL_ACTION,     ACTION_STOP, DIRECT_E,
+        GOAL_ADDMOVES,   0,0, 1,
+    ... (continues with sawing and log placement)
+        GOAL_TERM,
+    0
+};
+</code></pre>
+</main>
+<script>
+// Highlight active nav link also by current URL
+(function(){
+  var links = document.querySelectorAll('#sidebar a.nav-link');
+  var cur = window.location.pathname.split('/').pop() || 'index.html';
+  links.forEach(function(a){
+    if(a.getAttribute('href').split('/').pop() === cur) a.classList.add('active');
+  });
+})();
+</script>
+</body>
+</html>

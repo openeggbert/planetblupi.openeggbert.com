@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>actions.h — Complete Reference — Planet Blupi Docs</title>
+<style>
+
+:root {
+    --bg:        #0d1117;
+    --sidebar-bg:#161b22;
+    --border:    #30363d;
+    --text:      #c9d1d9;
+    --heading:   #e6edf3;
+    --link:      #58a6ff;
+    --link-hover:#79c0ff;
+    --code-bg:   #161b22;
+    --code-text: #f0f6fc;
+    --pre-bg:    #161b22;
+    --table-hd:  #21262d;
+    --table-alt: #161b22;
+    --accent:    #f78166;
+    --sidebar-w: 280px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ── Sidebar ─────────────────────────────────────────── */
+#sidebar {
+    width: var(--sidebar-w);
+    min-width: var(--sidebar-w);
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 0 0 2rem 0;
+    flex-shrink: 0;
+}
+
+#sidebar .logo {
+    display: block;
+    padding: 1rem 1rem 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--heading);
+    letter-spacing: 0.02em;
+}
+#sidebar .logo span { color: var(--accent); }
+
+#sidebar nav { padding: 0.5rem 0; }
+
+#sidebar .section-title {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6e7681;
+    padding: 0.85rem 1rem 0.2rem 1rem;
+}
+
+#sidebar a.nav-link {
+    display: block;
+    padding: 0.28rem 1rem 0.28rem 1.3rem;
+    font-size: 0.83rem;
+    color: #8b949e;
+    text-decoration: none;
+    border-left: 2px solid transparent;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+#sidebar a.nav-link:hover {
+    color: var(--link-hover);
+    background: rgba(88,166,255,0.06);
+    border-left-color: var(--link);
+}
+#sidebar a.nav-link.active {
+    color: var(--link);
+    border-left-color: var(--accent);
+    background: rgba(247,129,102,0.08);
+    font-weight: 600;
+}
+#sidebar a.nav-link.top-link {
+    font-size: 0.85rem;
+    color: #adbac7;
+    padding-left: 1rem;
+    font-weight: 600;
+}
+
+/* ── Main content ────────────────────────────────────── */
+#main {
+    flex: 1;
+    min-width: 0;
+    padding: 2.5rem 3rem 4rem 3rem;
+    max-width: 960px;
+}
+
+/* ── Breadcrumb ──────────────────────────────────────── */
+.breadcrumb {
+    font-size: 0.78rem;
+    color: #6e7681;
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    align-items: center;
+}
+.breadcrumb a { color: var(--link); text-decoration: none; }
+.breadcrumb a:hover { text-decoration: underline; }
+.breadcrumb .sep { color: #6e7681; }
+
+/* ── Typography ──────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--heading);
+    font-weight: 600;
+    line-height: 1.3;
+    margin-top: 1.8em;
+    margin-bottom: 0.6em;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.3em;
+}
+h1 { font-size: 1.9rem; margin-top: 0; }
+h2 { font-size: 1.4rem; }
+h3 { font-size: 1.15rem; border-bottom: none; }
+h4 { font-size: 1rem; border-bottom: none; color: var(--text); }
+
+p { margin: 0.75em 0; }
+
+a { color: var(--link); text-decoration: none; }
+a:hover { text-decoration: underline; color: var(--link-hover); }
+
+ul, ol { padding-left: 1.5em; margin: 0.5em 0; }
+li { margin: 0.25em 0; }
+
+/* ── Code ────────────────────────────────────────────── */
+code {
+    background: var(--code-bg);
+    color: var(--code-text);
+    padding: 0.15em 0.45em;
+    border-radius: 4px;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 0.85em;
+    border: 1px solid var(--border);
+}
+
+pre {
+    background: var(--pre-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1em 1.2em;
+    overflow-x: auto;
+    margin: 1em 0;
+    line-height: 1.55;
+}
+pre code {
+    background: transparent;
+    border: none;
+    padding: 0;
+    font-size: 0.83rem;
+    color: #e6edf3;
+}
+
+/* ── Tables ──────────────────────────────────────────── */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+    font-size: 0.88rem;
+    overflow-x: auto;
+    display: block;
+}
+thead tr { background: var(--table-hd); }
+th {
+    border: 1px solid var(--border);
+    padding: 0.5em 0.85em;
+    text-align: left;
+    color: var(--heading);
+    font-weight: 600;
+    white-space: nowrap;
+}
+td {
+    border: 1px solid var(--border);
+    padding: 0.45em 0.85em;
+    vertical-align: top;
+}
+tbody tr:nth-child(even) { background: var(--table-alt); }
+tbody tr:hover { background: #1c2128; }
+
+/* ── Blockquote ──────────────────────────────────────── */
+blockquote {
+    border-left: 3px solid var(--accent);
+    margin: 1em 0;
+    padding: 0.5em 1em;
+    background: rgba(247,129,102,0.07);
+    border-radius: 0 4px 4px 0;
+    color: #adbac7;
+    font-style: italic;
+}
+
+/* ── HR ──────────────────────────────────────────────── */
+hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2em 0;
+}
+
+/* ── Responsive ──────────────────────────────────────── */
+@media (max-width: 768px) {
+    body { flex-direction: column; }
+    #sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+    #main { padding: 1.5rem 1.2rem 3rem 1.2rem; }
+}
+
+/* ── Scroll ──────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: #30363d; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #484f58; }
+
+</style>
+</head>
+<body>
+<aside id="sidebar">
+  <a class="logo" href="../index.html">
+    <span>&#9679;</span> Planet Blupi Docs
+  </a>
+  <nav>
+<a class="nav-link top-link" href="../index.html">&#8962; Index</a>
+<span class="section-title">Overview</span>
+<a class="nav-link " href="../overview.html">Overview</a>
+<a class="nav-link " href="../history.html">History & Speedy Blupi</a>
+<span class="section-title">Architecture</span>
+<a class="nav-link " href="../architecture/overview.html">System Architecture</a>
+<a class="nav-link " href="../architecture/source-files.html">Source Files Reference</a>
+<span class="section-title">Engine Internals</span>
+<a class="nav-link " href="../engine/data-structures.html">Data Structures</a>
+<a class="nav-link " href="../engine/game-phases.html">Game Phases</a>
+<a class="nav-link " href="../engine/rendering.html">Rendering</a>
+<a class="nav-link " href="../engine/pathfinding.html">Pathfinding (A*)</a>
+<a class="nav-link " href="../engine/fog-of-war.html">Fog of War</a>
+<a class="nav-link " href="../engine/minimap.html">Minimap</a>
+<a class="nav-link " href="../engine/demo.html">Demo Recording</a>
+<a class="nav-link " href="../engine/undo.html">Undo System</a>
+<span class="section-title">World (Map)</span>
+<a class="nav-link " href="../world/file-format.html">World File Format</a>
+<a class="nav-link " href="../world/grid.html">World Grid</a>
+<a class="nav-link " href="../world/terrain.html">Terrain & Auto-tiling</a>
+<a class="nav-link " href="../world/objects.html">Object Layer</a>
+<span class="section-title">Characters</span>
+<a class="nav-link " href="../characters/overview.html">Character Overview</a>
+<a class="nav-link " href="../characters/blupi.html">Player (Blupi)</a>
+<a class="nav-link " href="../characters/enemies.html">Enemies</a>
+<a class="nav-link " href="../characters/vehicles.html">Vehicles</a>
+<a class="nav-link " href="../characters/actions.html">ACTION_* Codes</a>
+<a class="nav-link " href="../characters/goals.html">GOAL_* Interpreter</a>
+<span class="section-title">Gameplay</span>
+<a class="nav-link " href="../gameplay/win-conditions.html">Win Conditions</a>
+<a class="nav-link " href="../gameplay/toolbar.html">Toolbar Buttons</a>
+<a class="nav-link " href="../gameplay/directions.html">Directions</a>
+<a class="nav-link " href="../gameplay/skill-levels.html">Skill Levels</a>
+<a class="nav-link " href="../gameplay/regions.html">Regions / Themes</a>
+<a class="nav-link " href="../gameplay/cheat-codes.html">Cheat Codes</a>
+<span class="section-title">Assets</span>
+<a class="nav-link " href="../assets/images.html">Image Assets</a>
+<a class="nav-link " href="../assets/sounds.html">Sound Effects</a>
+<a class="nav-link " href="../assets/music.html">Music Tracks</a>
+<a class="nav-link " href="../assets/data-files.html">Data Files</a>
+<a class="nav-link " href="../assets/movies.html">Movies</a>
+<span class="section-title">User Interface</span>
+<a class="nav-link " href="../ui/messages.html">Windows Messages</a>
+<a class="nav-link " href="../ui/cursor-sprites.html">Cursor Sprites</a>
+<a class="nav-link " href="../ui/statistics.html">Statistics Panel</a>
+<a class="nav-link " href="../ui/error-codes.html">Error Codes</a>
+<span class="section-title">Platforms</span>
+<a class="nav-link " href="../platform/build.html">Build System</a>
+<a class="nav-link " href="../platform/config.html">Configuration</a>
+<a class="nav-link " href="../platform/localisation.html">Localisation</a>
+<a class="nav-link " href="../platform/web.html">Web / Emscripten</a>
+<span class="section-title">Speedy Blupi Reference</span>
+<a class="nav-link " href="overview.html">Relation to Speedy Blupi</a>
+<a class="nav-link active" href="actions-h.html">actions.h Reference</a>
+</nav>
+</aside>
+<main id="main">
+  <div class="breadcrumb"><a href="../index.html">Home</a> <span class="sep">/</span> <span>Speedy Blupi</span> <span class="sep">/</span> <span>Actions H</span></div>
+  <h1 id="actionsh-complete-reference">actions.h — Complete Reference</h1>
+<p>This file documents every symbol in <code>include/actions.h</code> for use in
+reverse-engineering / decompiling Speedy Blupi.</p>
+<hr />
+<h2 id="bytecode-opcodes">Bytecode Opcodes</h2>
+<pre><code class="language-c">#define OPTERM    0   // end of animation sequence
+#define OPLIST    1   // OPLIST i, D(i)..D(i-1)  — play frames i to i-1
+#define OPREPEAT  2   // OPREPEAT, n, i, D(i)..D(i-1) — repeat n times
+#define OPSOUND   3   // OPSOUND s — play sound index s
+</code></pre>
+<hr />
+<h2 id="action-enum-all-195-entries"><code>Action</code> Enum — All 195 Entries</h2>
+<p>Each action has 4 directional variants. Naming convention:
+- <code>_E</code> = East
+- <code>_N</code> = North
+- <code>_O</code> = West (Ouest in French)
+- <code>_S</code> = South</p>
+<p>Special entries at the end have no direction variants.</p>
+<pre><code class="language-c">typedef enum {
+    // Standing still
+    AC_STOP_E,         // 0  — stopped, facing east
+    AC_STOP_N,         // 1  — stopped, facing north
+    AC_STOP_O,         // 2  — stopped, facing west
+    AC_STOP_S,         // 3  — stopped, facing south
+
+    // Walking forward
+    AC_MARCHE_E,       // 4  — walking east
+    AC_MARCHE_N,       // 5  — walking north
+    AC_MARCHE_O,       // 6  — walking west
+    AC_MARCHE_S,       // 7  — walking south
+
+    // Walking backward
+    AC_RECULE_E,       // 8  — backing up (east)
+    AC_RECULE_N,       // 9
+    AC_RECULE_O,       // 10
+    AC_RECULE_S,       // 11
+
+    // Turning (corner transitions)
+    AC_TOURNE_NE,      // 12 — turning from north to east
+    AC_TOURNE_ON,      // 13 — turning from west to north
+    AC_TOURNE_SO,      // 14 — turning from south to west
+    AC_TOURNE_ES,      // 15 — turning from east to south
+    AC_TOURNE_SE,      // 16 — turning from south to east
+    AC_TOURNE_EN,      // 17 — turning from east to north
+    AC_TOURNE_NO,      // 18 — turning from north to west
+    AC_TOURNE_OS,      // 19 — turning from west to south
+
+    // Jump over obstacle (phase 1)
+    AC_SAUTE1_E,       // 20
+    AC_SAUTE1_N,       // 21
+    AC_SAUTE1_O,       // 22
+    AC_SAUTE1_S,       // 23
+
+    // Jump over obstacle (phase 2)
+    AC_SAUTE2_E,       // 24
+    AC_SAUTE2_N,       // 25
+    AC_SAUTE2_O,       // 26
+    AC_SAUTE2_S,       // 27
+
+    // Jump onto detonator
+    AC_SAUTEDET_E,     // 28
+    AC_SAUTEDET_N,     // 29
+    AC_SAUTEDET_O,     // 30
+    AC_SAUTEDET_S,     // 31
+
+    // Falling into hole
+    AC_TOMBE_E,        // 32
+    AC_TOMBE_N,        // 33
+    AC_TOMBE_O,        // 34
+    AC_TOMBE_S,        // 35
+
+    // Tank falling into hole
+    AC_TOMBE_TANK_E,   // 36
+    AC_TOMBE_TANK_N,   // 37
+    AC_TOMBE_TANK_O,   // 38
+    AC_TOMBE_TANK_S,   // 39
+
+    // Tank falling into hole (variant B)
+    AC_TOMBE_TANKB_E,  // 40
+    AC_TOMBE_TANKB_N,  // 41
+    AC_TOMBE_TANKB_O,  // 42
+    AC_TOMBE_TANKB_S,  // 43
+
+    // Drinking (good potion)
+    AC_BOIT_E,         // 44
+    AC_BOIT_N,         // 45
+    AC_BOIT_O,         // 46
+    AC_BOIT_S,         // 47
+
+    // Drinking (bad potion — boitx = bad drink)
+    AC_BOITX_E,        // 48
+    AC_BOITX_N,        // 49
+    AC_BOITX_O,        // 50
+    AC_BOITX_S,        // 51
+
+    // Getting hit by pie/tourte
+    AC_TOURTE_E,       // 52
+    AC_TOURTE_N,       // 53
+    AC_TOURTE_O,       // 54
+    AC_TOURTE_S,       // 55
+
+    // Resting
+    AC_REPOS_E,        // 56
+    AC_REPOS_N,        // 57
+    AC_REPOS_O,        // 58
+    AC_REPOS_S,        // 59
+
+    // Sleeping
+    AC_DORT_E,         // 60
+    AC_DORT_N,         // 61
+    AC_DORT_O,         // 62
+    AC_DORT_S,         // 63
+
+    // Celebrating / youpie
+    AC_YOUPIE_E,       // 64
+    AC_YOUPIE_N,       // 65
+    AC_YOUPIE_O,       // 66
+    AC_YOUPIE_S,       // 67
+
+    // Saying no
+    AC_NON_E,          // 68
+    AC_NON_N,          // 69
+    AC_NON_O,          // 70
+    AC_NON_S,          // 71
+
+    // Pushing object
+    AC_POUSSE_E,       // 72
+    AC_POUSSE_N,       // 73
+    AC_POUSSE_O,       // 74
+    AC_POUSSE_S,       // 75
+
+    // Cannot push (blocked)
+    AC_NPOUSSE_E,      // 76
+    AC_NPOUSSE_N,      // 77
+    AC_NPOUSSE_O,      // 78
+    AC_NPOUSSE_S,      // 79
+
+    // Pushing a crate (wooden)
+    AC_CAISSE_E,       // 80
+    AC_CAISSE_N,       // 81
+    AC_CAISSE_O,       // 82
+    AC_CAISSE_S,       // 83
+
+    // Pushing a crate (glass)
+    AC_CAISSEV_E,      // 84
+    AC_CAISSEV_N,      // 85
+    AC_CAISSEV_O,      // 86
+    AC_CAISSEV_S,      // 87
+
+    // Pushing a crate (explosive)
+    AC_CAISSEO_E,      // 88
+    AC_CAISSEO_N,      // 89
+    AC_CAISSEO_O,      // 90
+    AC_CAISSEO_S,      // 91
+
+    // Pushing an explosive crate (declining / decelerated)
+    AC_CAISSEOD_E,     // 92
+    AC_CAISSEOD_N,     // 93
+    AC_CAISSEOD_O,     // 94
+    AC_CAISSEOD_S,     // 95
+
+    // Pushing a magnetic crate
+    AC_CAISSEG_E,      // 96
+    AC_CAISSEG_N,      // 97
+    AC_CAISSEG_O,      // 98
+    AC_CAISSEG_S,      // 99
+
+    // Crates falling into hole
+    AC_CAISSE_T,       // 100
+    AC_CAISSEV_T,      // 101
+    AC_CAISSEO_T,      // 102
+    AC_CAISSEG_T,      // 103
+
+    // Vision / looking (camera effect)
+    AC_VISION_E,       // 104
+    AC_VISION_N,       // 105
+    AC_VISION_O,       // 106
+    AC_VISION_S,       // 107
+
+    // Departure (teleporter exit)
+    AC_DEPART_E,       // 108
+
+    // Balloon travel
+    AC_BALLON_E,       // 109
+
+    // Arrival animations
+    AC_ARRIVEE_E,      // 110
+    AC_ARRIVEE_N,      // 111
+    AC_ARRIVEE_O,      // 112
+    AC_ARRIVEE_S,      // 113
+
+    // Arrival with balloon
+    AC_ARRIVEE_M,      // 114
+
+    // Balloon ascending
+    AC_BALLON_M,       // 115
+
+    // Playing piano
+    AC_PIANO_O,        // 116
+
+    // Magic spell (becoming transparent)
+    AC_MAGIC_E,        // 117
+    AC_MAGIC_N,        // 118
+    AC_MAGIC_O,        // 119
+    AC_MAGIC_S,        // 120
+
+    // Electrocution
+    AC_ELECTRO_O,      // 121
+
+    // Watching TV / television
+    AC_TELE_N,         // 122
+
+    // Villain / mean character
+    AC_MECHANT_E,      // 123
+    AC_MECHANT_N,      // 124
+    AC_MECHANT_O,      // 125
+    AC_MECHANT_S,      // 126
+
+    // Sliding on banana peel
+    AC_GLISSE_E,       // 127
+    AC_GLISSE_N,       // 128
+    AC_GLISSE_O,       // 129
+    AC_GLISSE_S,       // 130
+
+    // Carrying a book
+    AC_LIVRE_E,        // 131
+    AC_LIVRE_N,        // 132
+    AC_LIVRE_O,        // 133
+    AC_LIVRE_S,        // 134
+
+    // Playing music / musical instrument
+    AC_MUSIQUE_E,      // 135
+    AC_MUSIQUE_N,      // 136
+    AC_MUSIQUE_O,      // 137
+    AC_MUSIQUE_S,      // 138
+
+    // Carrying a key
+    AC_CLE_E,          // 139
+    AC_CLE_N,          // 140
+    AC_CLE_O,          // 141
+    AC_CLE_S,          // 142
+
+    // Opening a door
+    AC_PORTE_E,        // 143
+    AC_PORTE_N,        // 144
+    AC_PORTE_O,        // 145
+    AC_PORTE_S,        // 146
+
+    // Crouching / lowering
+    AC_BAISSE_O,       // 147
+
+    // Overeating explosion
+    AC_EXPLOSE_E,      // 148
+    AC_EXPLOSE_N,      // 149
+    AC_EXPLOSE_O,      // 150
+    AC_EXPLOSE_S,      // 151
+
+    // Starting (launching/departure)
+    AC_START_E,        // 152
+    AC_START_N,        // 153
+    AC_START_O,        // 154
+    AC_START_S,        // 155
+
+    // Thinking / reflection
+    AC_REFLEXION_E,    // 156
+    AC_REFLEXION_N,    // 157
+    AC_REFLEXION_O,    // 158
+    AC_REFLEXION_S,    // 159
+
+    // Shrugging
+    AC_HAUSSE_E,       // 160
+    AC_HAUSSE_N,       // 161
+    AC_HAUSSE_O,       // 162
+    AC_HAUSSE_S,       // 163
+
+    // Yo-yo trick
+    AC_YOYO_E,         // 164
+    AC_YOYO_N,         // 165
+    AC_YOYO_O,         // 166
+    AC_YOYO_S,         // 167
+
+    // Hit by tank
+    AC_TANK,           // 168
+} Action;
+</code></pre>
+<hr />
+<h2 id="objet-enum-all-18-entries"><code>Objet</code> Enum — All 18 Entries</h2>
+<p>Animated decoration state codes for non-character objects:</p>
+<pre><code class="language-c">typedef enum {
+    OB_DETONATEURA,    // 0  — detonator lowering (phase A)
+    OB_DETONATEURB,    // 1  — detonator (phase B)
+    OB_DETONATEURC,    // 2  — detonator (phase C)
+    OB_BOMBEA,         // 3  — bomb exploding (phase A)
+    OB_BOMBEB,         // 4  — bomb (phase B)
+    OB_BOMBEC,         // 5  — bomb (phase C)
+    OB_SENSUNIO,       // 6  — one-way sign rising (west)
+    OB_SENSUNIE,       // 7  — one-way sign (east)
+    OB_SENSUNIN,       // 8  — one-way sign (north)
+    OB_SENSUNIS,       // 9  — one-way sign (south)
+    OB_VITRENS,        // 10 — glass pane shattering (NS)
+    OB_VITREEO,        // 11 — glass pane shattering (EO)
+    OB_BALLONEX,       // 12 — balloon exploding
+    OB_BAISSE,         // 13 — electronic door lowering
+    OB_TELE,           // 14 — TV in operation
+    OB_UNSEUL,         // 15 — trapdoor opening (hand coming out)
+    OB_DEPART,         // 16 — teleporter opening/closing
+    OB_TROPBU,         // 17 — floor opening (overeating result)
+} Objet;
+</code></pre>
+<hr />
+<h2 id="sound-enum-all-sfx-139-and-music-101116"><code>Sound</code> Enum — All SFX (1–39) and Music (101–116)</h2>
+<blockquote>
+<p><strong>Warning</strong>: These values are completely separate from Planet Blupi's <code>SOUND_*</code> macros.
+They belong to the Speedy Blupi audio engine only.</p>
+</blockquote>
+<pre><code class="language-c">typedef enum {
+    SOUND_SAUT1         = 1,   // Toto about to jump
+    SOUND_SAUT2         = 2,   // Toto landing after jump
+    SOUND_TROPBU        = 3,   // Toto drank too much
+    SOUND_TOMBE         = 4,   // Toto falling into a hole
+    SOUND_TROUVEBALLON  = 5,   // Toto found the balloon
+    SOUND_TROUVECLE     = 6,   // Toto found a key
+    SOUND_BOIT          = 7,   // Toto drinking from bottle
+    SOUND_MAGIE         = 8,   // Toto about to turn transparent (magic)
+    SOUND_ELECTRO       = 9,   // Toto getting electrocuted
+    SOUND_ARRIVE        = 10,  // Toto arriving from underground on balloon
+    SOUND_REPOS         = 11,  // Toto resting
+    SOUND_DORT          = 12,  // Toto falling asleep
+    SOUND_GLISSE        = 13,  // Toto sliding on banana peel
+    SOUND_TOURTE        = 14,  // Toto hit by pie
+    SOUND_LUNETTES      = 15,  // Toto putting on glasses
+    SOUND_CREVE         = 16,  // villain pops a balloon
+    SOUND_LIVRE         = 17,  // Toto reading a book
+    SOUND_MALADE        = 18,  // Toto falling sick
+    SOUND_POUSSE        = 19,  // Toto pushing a crate
+    SOUND_SENSUNI       = 20,  // one-way sign rising
+    SOUND_PORTEOUVRE    = 21,  // door opening
+    SOUND_PORTEBAISSE   = 22,  // armoured door lowering
+    SOUND_UNSEUL        = 23,  // hand coming out of trapdoor
+    SOUND_VITRECASSE    = 24,  // glass pane shattering
+    SOUND_BOMBE         = 25,  // bomb exploding
+    SOUND_NON           = 26,  // Toto saying no
+    SOUND_CLIC          = 27,  // button click
+    SOUND_CAISSE        = 28,  // wooden crate falling
+    SOUND_CAISSEV       = 29,  // glass/light structure falling
+    SOUND_CAISSEO       = 30,  // ball/round object falling
+    SOUND_ACTION        = 31,  // action in the scenery
+    SOUND_MECHANT       = 32,  // Toto becoming a villain
+    SOUND_PASSEMUR      = 33,  // Toto walking through wall
+    SOUND_AIMANT        = 34,  // Toto landing on magnet
+    SOUND_PORTEBAISSE2  = 35,  // armoured door open (variant)
+    SOUND_MACHINE       = 36,  // electronic machine
+    SOUND_OISEAUX       = 37,  // birds chirping
+    SOUND_BURP          = 38,  // Toto burping (drank too much)
+    SOUND_CAISSEG       = 39,  // magnetic/machine falling
+
+    // Music tracks (indexed by episode-level):
+    SOUND_MUSIC11       = 101, // music episode 1, level 1
+    SOUND_MUSIC12       = 102, // music episode 1, level 2
+    SOUND_MUSIC13       = 103, // music episode 1, level 3
+    SOUND_MUSIC14       = 104, // music episode 1, level 4
+    SOUND_MUSIC21       = 105, // music episode 2, level 1
+    SOUND_MUSIC22       = 106, // music episode 2, level 2
+    SOUND_MUSIC23       = 107, // music episode 2, level 3
+    SOUND_MUSIC24       = 108, // music episode 2, level 4
+    SOUND_MUSIC31       = 109, // music episode 3, level 1
+    SOUND_MUSIC32       = 110, // music episode 3, level 2
+    SOUND_MUSIC33       = 111, // music episode 3, level 3
+    SOUND_MUSIC34       = 112, // music episode 3, level 4
+    SOUND_MUSIC41       = 113, // music episode 4, level 1
+    SOUND_MUSIC42       = 114, // music episode 4, level 2
+    SOUND_MUSIC43       = 115, // music episode 4, level 3
+    SOUND_MUSIC44       = 116, // music episode 4, level 4
+} Sound;
+</code></pre>
+<hr />
+<h2 id="helper-function-signatures">Helper Function Signatures</h2>
+<pre><code class="language-cpp">// Returns sprite frame table for an action + walk type combination:
+short* ConvActionToTabIcon(Action action, short typemarche);
+
+// Returns movement delta table for an action:
+short* ConvActionToTabMove(Action action);
+
+// Returns sprite frame table for a decoration animation state:
+short* ConvObjetToTabIcon(Objet objet);
+</code></pre>
+<p>These functions use the <code>Action</code> / <code>Objet</code> value as an index into
+static lookup tables containing the animation frame sequences.</p>
+<hr />
+<h2 id="key-patterns-for-binary-reverse-engineering">Key Patterns for Binary Reverse Engineering</h2>
+<ol>
+<li><strong>OPTERM (0)</strong> marks the end of every animation sequence — search for 0x00 terminators in data tables</li>
+<li><strong>OPLIST (1)</strong> followed by a count byte then frame indices — common pattern for short animations</li>
+<li><strong>OPREPEAT (2)</strong> followed by repeat count, then count byte then frame indices — for looping animations</li>
+<li><strong>OPSOUND (3)</strong> followed by a single-byte Sound enum value — finds all sound trigger points in animation data</li>
+<li>The <code>Action</code> enum starts at 0 (AC_STOP_E) and goes to 168 (AC_TANK) — 169 total entries</li>
+<li>The <code>Objet</code> enum has 18 entries (0–17)</li>
+<li>Look for tables of short* pointers indexed by Action value × direction — the animation lookup tables</li>
+</ol>
+</main>
+<script>
+// Highlight active nav link also by current URL
+(function(){
+  var links = document.querySelectorAll('#sidebar a.nav-link');
+  var cur = window.location.pathname.split('/').pop() || 'index.html';
+  links.forEach(function(a){
+    if(a.getAttribute('href').split('/').pop() === cur) a.classList.add('active');
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Terrain & Auto-tiling — Planet Blupi Docs</title>
+<style>
+
+:root {
+    --bg:        #0d1117;
+    --sidebar-bg:#161b22;
+    --border:    #30363d;
+    --text:      #c9d1d9;
+    --heading:   #e6edf3;
+    --link:      #58a6ff;
+    --link-hover:#79c0ff;
+    --code-bg:   #161b22;
+    --code-text: #f0f6fc;
+    --pre-bg:    #161b22;
+    --table-hd:  #21262d;
+    --table-alt: #161b22;
+    --accent:    #f78166;
+    --sidebar-w: 280px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ── Sidebar ─────────────────────────────────────────── */
+#sidebar {
+    width: var(--sidebar-w);
+    min-width: var(--sidebar-w);
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 0 0 2rem 0;
+    flex-shrink: 0;
+}
+
+#sidebar .logo {
+    display: block;
+    padding: 1rem 1rem 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--heading);
+    letter-spacing: 0.02em;
+}
+#sidebar .logo span { color: var(--accent); }
+
+#sidebar nav { padding: 0.5rem 0; }
+
+#sidebar .section-title {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6e7681;
+    padding: 0.85rem 1rem 0.2rem 1rem;
+}
+
+#sidebar a.nav-link {
+    display: block;
+    padding: 0.28rem 1rem 0.28rem 1.3rem;
+    font-size: 0.83rem;
+    color: #8b949e;
+    text-decoration: none;
+    border-left: 2px solid transparent;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+#sidebar a.nav-link:hover {
+    color: var(--link-hover);
+    background: rgba(88,166,255,0.06);
+    border-left-color: var(--link);
+}
+#sidebar a.nav-link.active {
+    color: var(--link);
+    border-left-color: var(--accent);
+    background: rgba(247,129,102,0.08);
+    font-weight: 600;
+}
+#sidebar a.nav-link.top-link {
+    font-size: 0.85rem;
+    color: #adbac7;
+    padding-left: 1rem;
+    font-weight: 600;
+}
+
+/* ── Main content ────────────────────────────────────── */
+#main {
+    flex: 1;
+    min-width: 0;
+    padding: 2.5rem 3rem 4rem 3rem;
+    max-width: 960px;
+}
+
+/* ── Breadcrumb ──────────────────────────────────────── */
+.breadcrumb {
+    font-size: 0.78rem;
+    color: #6e7681;
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    align-items: center;
+}
+.breadcrumb a { color: var(--link); text-decoration: none; }
+.breadcrumb a:hover { text-decoration: underline; }
+.breadcrumb .sep { color: #6e7681; }
+
+/* ── Typography ──────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--heading);
+    font-weight: 600;
+    line-height: 1.3;
+    margin-top: 1.8em;
+    margin-bottom: 0.6em;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.3em;
+}
+h1 { font-size: 1.9rem; margin-top: 0; }
+h2 { font-size: 1.4rem; }
+h3 { font-size: 1.15rem; border-bottom: none; }
+h4 { font-size: 1rem; border-bottom: none; color: var(--text); }
+
+p { margin: 0.75em 0; }
+
+a { color: var(--link); text-decoration: none; }
+a:hover { text-decoration: underline; color: var(--link-hover); }
+
+ul, ol { padding-left: 1.5em; margin: 0.5em 0; }
+li { margin: 0.25em 0; }
+
+/* ── Code ────────────────────────────────────────────── */
+code {
+    background: var(--code-bg);
+    color: var(--code-text);
+    padding: 0.15em 0.45em;
+    border-radius: 4px;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 0.85em;
+    border: 1px solid var(--border);
+}
+
+pre {
+    background: var(--pre-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1em 1.2em;
+    overflow-x: auto;
+    margin: 1em 0;
+    line-height: 1.55;
+}
+pre code {
+    background: transparent;
+    border: none;
+    padding: 0;
+    font-size: 0.83rem;
+    color: #e6edf3;
+}
+
+/* ── Tables ──────────────────────────────────────────── */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+    font-size: 0.88rem;
+    overflow-x: auto;
+    display: block;
+}
+thead tr { background: var(--table-hd); }
+th {
+    border: 1px solid var(--border);
+    padding: 0.5em 0.85em;
+    text-align: left;
+    color: var(--heading);
+    font-weight: 600;
+    white-space: nowrap;
+}
+td {
+    border: 1px solid var(--border);
+    padding: 0.45em 0.85em;
+    vertical-align: top;
+}
+tbody tr:nth-child(even) { background: var(--table-alt); }
+tbody tr:hover { background: #1c2128; }
+
+/* ── Blockquote ──────────────────────────────────────── */
+blockquote {
+    border-left: 3px solid var(--accent);
+    margin: 1em 0;
+    padding: 0.5em 1em;
+    background: rgba(247,129,102,0.07);
+    border-radius: 0 4px 4px 0;
+    color: #adbac7;
+    font-style: italic;
+}
+
+/* ── HR ──────────────────────────────────────────────── */
+hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2em 0;
+}
+
+/* ── Responsive ──────────────────────────────────────── */
+@media (max-width: 768px) {
+    body { flex-direction: column; }
+    #sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+    #main { padding: 1.5rem 1.2rem 3rem 1.2rem; }
+}
+
+/* ── Scroll ──────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: #30363d; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #484f58; }
+
+</style>
+</head>
+<body>
+<aside id="sidebar">
+  <a class="logo" href="../index.html">
+    <span>&#9679;</span> Planet Blupi Docs
+  </a>
+  <nav>
+<a class="nav-link top-link" href="../index.html">&#8962; Index</a>
+<span class="section-title">Overview</span>
+<a class="nav-link " href="../overview.html">Overview</a>
+<a class="nav-link " href="../history.html">History & Speedy Blupi</a>
+<span class="section-title">Architecture</span>
+<a class="nav-link " href="../architecture/overview.html">System Architecture</a>
+<a class="nav-link " href="../architecture/source-files.html">Source Files Reference</a>
+<span class="section-title">Engine Internals</span>
+<a class="nav-link " href="../engine/data-structures.html">Data Structures</a>
+<a class="nav-link " href="../engine/game-phases.html">Game Phases</a>
+<a class="nav-link " href="../engine/rendering.html">Rendering</a>
+<a class="nav-link " href="../engine/pathfinding.html">Pathfinding (A*)</a>
+<a class="nav-link " href="../engine/fog-of-war.html">Fog of War</a>
+<a class="nav-link " href="../engine/minimap.html">Minimap</a>
+<a class="nav-link " href="../engine/demo.html">Demo Recording</a>
+<a class="nav-link " href="../engine/undo.html">Undo System</a>
+<span class="section-title">World (Map)</span>
+<a class="nav-link " href="file-format.html">World File Format</a>
+<a class="nav-link " href="grid.html">World Grid</a>
+<a class="nav-link active" href="terrain.html">Terrain & Auto-tiling</a>
+<a class="nav-link " href="objects.html">Object Layer</a>
+<span class="section-title">Characters</span>
+<a class="nav-link " href="../characters/overview.html">Character Overview</a>
+<a class="nav-link " href="../characters/blupi.html">Player (Blupi)</a>
+<a class="nav-link " href="../characters/enemies.html">Enemies</a>
+<a class="nav-link " href="../characters/vehicles.html">Vehicles</a>
+<a class="nav-link " href="../characters/actions.html">ACTION_* Codes</a>
+<a class="nav-link " href="../characters/goals.html">GOAL_* Interpreter</a>
+<span class="section-title">Gameplay</span>
+<a class="nav-link " href="../gameplay/win-conditions.html">Win Conditions</a>
+<a class="nav-link " href="../gameplay/toolbar.html">Toolbar Buttons</a>
+<a class="nav-link " href="../gameplay/directions.html">Directions</a>
+<a class="nav-link " href="../gameplay/skill-levels.html">Skill Levels</a>
+<a class="nav-link " href="../gameplay/regions.html">Regions / Themes</a>
+<a class="nav-link " href="../gameplay/cheat-codes.html">Cheat Codes</a>
+<span class="section-title">Assets</span>
+<a class="nav-link " href="../assets/images.html">Image Assets</a>
+<a class="nav-link " href="../assets/sounds.html">Sound Effects</a>
+<a class="nav-link " href="../assets/music.html">Music Tracks</a>
+<a class="nav-link " href="../assets/data-files.html">Data Files</a>
+<a class="nav-link " href="../assets/movies.html">Movies</a>
+<span class="section-title">User Interface</span>
+<a class="nav-link " href="../ui/messages.html">Windows Messages</a>
+<a class="nav-link " href="../ui/cursor-sprites.html">Cursor Sprites</a>
+<a class="nav-link " href="../ui/statistics.html">Statistics Panel</a>
+<a class="nav-link " href="../ui/error-codes.html">Error Codes</a>
+<span class="section-title">Platforms</span>
+<a class="nav-link " href="../platform/build.html">Build System</a>
+<a class="nav-link " href="../platform/config.html">Configuration</a>
+<a class="nav-link " href="../platform/localisation.html">Localisation</a>
+<a class="nav-link " href="../platform/web.html">Web / Emscripten</a>
+<span class="section-title">Speedy Blupi Reference</span>
+<a class="nav-link " href="../speedy-blupi/overview.html">Relation to Speedy Blupi</a>
+<a class="nav-link " href="../speedy-blupi/actions-h.html">actions.h Reference</a>
+</nav>
+</aside>
+<main id="main">
+  <div class="breadcrumb"><a href="../index.html">Home</a> <span class="sep">/</span> <span>World</span> <span class="sep">/</span> <span>Terrain</span></div>
+  <h1 id="terrain-auto-tiling">Terrain &amp; Auto-tiling</h1>
+<h2 id="floor-tiles">Floor Tiles</h2>
+<p>The floor is stored in <code>Cellule.floorChannel</code> and <code>Cellule.floorIcon</code>.
+The floor channel is always <code>CHFLOOR (1)</code> or <code>CHGROUND (11)</code>.
+The sprite file depends on the active region:</p>
+<table>
+<thead>
+<tr>
+<th>Region</th>
+<th><code>m_region</code></th>
+<th>Floor file</th>
+<th>Object file</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Normal (green / temperate)</td>
+<td>0</td>
+<td><code>floor000.blp</code></td>
+<td><code>obj000.blp</code></td>
+</tr>
+<tr>
+<td>Tropical (palm trees)</td>
+<td>1</td>
+<td><code>floor001.blp</code></td>
+<td><code>obj001.blp</code></td>
+</tr>
+<tr>
+<td>Winter (snow / ice)</td>
+<td>2</td>
+<td><code>floor002.blp</code></td>
+<td><code>obj002.blp</code></td>
+</tr>
+<tr>
+<td>Pine forest</td>
+<td>3</td>
+<td><code>floor003.blp</code></td>
+<td><code>obj003.blp</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="key-floor-icon-ranges-floor000blp">Key Floor Icon Ranges (floor000.blp)</h2>
+<table>
+<thead>
+<tr>
+<th>Icon range</th>
+<th>Terrain type</th>
+<th>Passability</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>Black / empty (world border)</td>
+<td>Impassable for all</td>
+</tr>
+<tr>
+<td>1–14</td>
+<td>Water↔land transitions (shoreline)</td>
+<td>Depends on specific icon</td>
+</tr>
+<tr>
+<td>15–19</td>
+<td>Land (grass / normal)</td>
+<td>Passable for all ground units</td>
+</tr>
+<tr>
+<td>20–32</td>
+<td>Dark soil / moss</td>
+<td>Passable</td>
+</tr>
+<tr>
+<td>Water icons</td>
+<td>Water</td>
+<td>Passable for boats only</td>
+</tr>
+<tr>
+<td>Ice icons</td>
+<td>Slippery ice</td>
+<td>Passable, but causes sliding</td>
+</tr>
+<tr>
+<td>Snow icons</td>
+<td>Snow (winter region)</td>
+<td>Passable</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="auto-tiling-arrangecpp">Auto-tiling (arrange.cpp)</h2>
+<p>Auto-tiling automatically selects the correct floor tile based on neighbouring cells
+to make terrain transitions look natural.</p>
+<h3 id="tablesee-water-transitions"><code>tableSee</code> — water transitions</h3>
+<pre><code class="language-cpp">// Encodes which quadrants (0-1 / 2-3) of a cell contain water
+// 14 patterns × 4 quadrants
+static char tableSee[14*4] = {
+    0,0,0,0,  // 1 - no water
+    0,1,0,1,  // 2
+    0,0,1,1,  // 3
+    1,0,1,0,  // 4
+    1,1,0,0,  // 5
+    0,0,0,1,  // 6
+    0,0,1,0,  // 7
+    1,0,0,0,  // 8
+    0,1,0,0,  // 9
+    0,1,1,1,  // 10
+    1,0,1,1,  // 11
+    1,1,1,0,  // 12
+    1,1,0,1,  // 13
+    1,1,1,1,  // 14 - fully water cell
+};
+</code></pre>
+<h3 id="tabledark-moss-dark-soil-transitions"><code>tableDark</code> — moss / dark soil transitions</h3>
+<pre><code class="language-cpp">// 13 patterns × 4 quadrants (icons 20–32)
+static char tableDark[13*4] = { ... };
+</code></pre>
+<h3 id="arrangefloorcel"><code>ArrangeFloor(cel)</code></h3>
+<p>Main floor auto-tiling function:
+1. Examines 8 neighbouring cells
+2. Determines terrain types of neighbours (water, grass, moss, ...)
+3. Selects the appropriate tile from <code>tableSee</code> / <code>tableDark</code>
+4. Applies the icon to the cell</p>
+<h3 id="arrangemurcel-icon-index"><code>ArrangeMur(cel, icon, index)</code></h3>
+<p>Wall auto-tiling — sets the correct wall icon (corners, straight segments)
+based on neighbouring wall cells.</p>
+<h3 id="arrangebuildcel-channel-icon"><code>ArrangeBuild(cel, channel, icon)</code></h3>
+<p>Building auto-tiling — sets the correct building icon depending on whether
+a neighbouring cell is also part of the same building.</p>
+<h3 id="arrangeobjectcel"><code>ArrangeObject(cel)</code></h3>
+<p>Adjusts objects on the cell and its surroundings after placing a new object.</p>
+<h3 id="arrangeblupi"><code>ArrangeBlupi()</code></h3>
+<p>Adjusts cell appearance for Blupi's current state
+(e.g. if Blupi stands on water in a boat, the cell below gets a water texture).</p>
+<hr />
+<h2 id="flood-fill-arrangefill">Flood-fill (ArrangeFill)</h2>
+<p><code>ArrangeFill()</code> performs a flood-fill with a chosen terrain type:</p>
+<pre><code class="language-cpp">void CDecor::ArrangeFill(POINT pos, int channel, int icon, BOOL bFloor)
+// Starts from cell pos
+// Spreads to all neighbouring cells of the same type
+// Replaces them with the given channel/icon
+// Used in the editor for quick area filling
+</code></pre>
+<p>Helper functions:
+- <code>ArrangeFillTestFloor(cel1, cel2)</code> — verify flood-fill eligibility
+- <code>ArrangeFillTest(pos)</code> — test a single cell for flood-fill
+- <code>ArrangeFillPut(pos, channel, icon)</code> — place a tile during flood-fill
+- <code>ArrangeFillSearch(pos)</code> — search neighbouring cells</p>
+<hr />
+<h2 id="floor-passability-table-obstaclecpp">Floor Passability Table (obstacle.cpp)</h2>
+<pre><code class="language-cpp">// tableObstacleFloor[] — passability of each floor icon index
+// 0 = passable, 1 = obstacle
+// Indexed by floor icon (0..N)
+// Each icon has 5×5 = 25 passability bits (for different character types)
+static char tableObstacleFloor[] = {
+    1,1,1,1,1,  // icon 0 (black border) — all blocked
+    1,1,1,1,1,
+    ...
+    0,0,0,0,0,  // icon 1 (land) — all passable
+    ...
+};
+</code></pre>
+</main>
+<script>
+// Highlight active nav link also by current URL
+(function(){
+  var links = document.querySelectorAll('#sidebar a.nav-link');
+  var cur = window.location.pathname.split('/').pop() || 'index.html';
+  links.forEach(function(a){
+    if(a.getAttribute('href').split('/').pop() === cur) a.classList.add('active');
+  });
+})();
+</script>
+</body>
+</html>

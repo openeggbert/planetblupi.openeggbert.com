@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source Files Reference — Planet Blupi Docs</title>
+<style>
+
+:root {
+    --bg:        #0d1117;
+    --sidebar-bg:#161b22;
+    --border:    #30363d;
+    --text:      #c9d1d9;
+    --heading:   #e6edf3;
+    --link:      #58a6ff;
+    --link-hover:#79c0ff;
+    --code-bg:   #161b22;
+    --code-text: #f0f6fc;
+    --pre-bg:    #161b22;
+    --table-hd:  #21262d;
+    --table-alt: #161b22;
+    --accent:    #f78166;
+    --sidebar-w: 280px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ── Sidebar ─────────────────────────────────────────── */
+#sidebar {
+    width: var(--sidebar-w);
+    min-width: var(--sidebar-w);
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 0 0 2rem 0;
+    flex-shrink: 0;
+}
+
+#sidebar .logo {
+    display: block;
+    padding: 1rem 1rem 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--heading);
+    letter-spacing: 0.02em;
+}
+#sidebar .logo span { color: var(--accent); }
+
+#sidebar nav { padding: 0.5rem 0; }
+
+#sidebar .section-title {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6e7681;
+    padding: 0.85rem 1rem 0.2rem 1rem;
+}
+
+#sidebar a.nav-link {
+    display: block;
+    padding: 0.28rem 1rem 0.28rem 1.3rem;
+    font-size: 0.83rem;
+    color: #8b949e;
+    text-decoration: none;
+    border-left: 2px solid transparent;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+#sidebar a.nav-link:hover {
+    color: var(--link-hover);
+    background: rgba(88,166,255,0.06);
+    border-left-color: var(--link);
+}
+#sidebar a.nav-link.active {
+    color: var(--link);
+    border-left-color: var(--accent);
+    background: rgba(247,129,102,0.08);
+    font-weight: 600;
+}
+#sidebar a.nav-link.top-link {
+    font-size: 0.85rem;
+    color: #adbac7;
+    padding-left: 1rem;
+    font-weight: 600;
+}
+
+/* ── Main content ────────────────────────────────────── */
+#main {
+    flex: 1;
+    min-width: 0;
+    padding: 2.5rem 3rem 4rem 3rem;
+    max-width: 960px;
+}
+
+/* ── Breadcrumb ──────────────────────────────────────── */
+.breadcrumb {
+    font-size: 0.78rem;
+    color: #6e7681;
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    align-items: center;
+}
+.breadcrumb a { color: var(--link); text-decoration: none; }
+.breadcrumb a:hover { text-decoration: underline; }
+.breadcrumb .sep { color: #6e7681; }
+
+/* ── Typography ──────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--heading);
+    font-weight: 600;
+    line-height: 1.3;
+    margin-top: 1.8em;
+    margin-bottom: 0.6em;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.3em;
+}
+h1 { font-size: 1.9rem; margin-top: 0; }
+h2 { font-size: 1.4rem; }
+h3 { font-size: 1.15rem; border-bottom: none; }
+h4 { font-size: 1rem; border-bottom: none; color: var(--text); }
+
+p { margin: 0.75em 0; }
+
+a { color: var(--link); text-decoration: none; }
+a:hover { text-decoration: underline; color: var(--link-hover); }
+
+ul, ol { padding-left: 1.5em; margin: 0.5em 0; }
+li { margin: 0.25em 0; }
+
+/* ── Code ────────────────────────────────────────────── */
+code {
+    background: var(--code-bg);
+    color: var(--code-text);
+    padding: 0.15em 0.45em;
+    border-radius: 4px;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 0.85em;
+    border: 1px solid var(--border);
+}
+
+pre {
+    background: var(--pre-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1em 1.2em;
+    overflow-x: auto;
+    margin: 1em 0;
+    line-height: 1.55;
+}
+pre code {
+    background: transparent;
+    border: none;
+    padding: 0;
+    font-size: 0.83rem;
+    color: #e6edf3;
+}
+
+/* ── Tables ──────────────────────────────────────────── */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+    font-size: 0.88rem;
+    overflow-x: auto;
+    display: block;
+}
+thead tr { background: var(--table-hd); }
+th {
+    border: 1px solid var(--border);
+    padding: 0.5em 0.85em;
+    text-align: left;
+    color: var(--heading);
+    font-weight: 600;
+    white-space: nowrap;
+}
+td {
+    border: 1px solid var(--border);
+    padding: 0.45em 0.85em;
+    vertical-align: top;
+}
+tbody tr:nth-child(even) { background: var(--table-alt); }
+tbody tr:hover { background: #1c2128; }
+
+/* ── Blockquote ──────────────────────────────────────── */
+blockquote {
+    border-left: 3px solid var(--accent);
+    margin: 1em 0;
+    padding: 0.5em 1em;
+    background: rgba(247,129,102,0.07);
+    border-radius: 0 4px 4px 0;
+    color: #adbac7;
+    font-style: italic;
+}
+
+/* ── HR ──────────────────────────────────────────────── */
+hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2em 0;
+}
+
+/* ── Responsive ──────────────────────────────────────── */
+@media (max-width: 768px) {
+    body { flex-direction: column; }
+    #sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+    #main { padding: 1.5rem 1.2rem 3rem 1.2rem; }
+}
+
+/* ── Scroll ──────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: #30363d; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #484f58; }
+
+</style>
+</head>
+<body>
+<aside id="sidebar">
+  <a class="logo" href="../index.html">
+    <span>&#9679;</span> Planet Blupi Docs
+  </a>
+  <nav>
+<a class="nav-link top-link" href="../index.html">&#8962; Index</a>
+<span class="section-title">Overview</span>
+<a class="nav-link " href="../overview.html">Overview</a>
+<a class="nav-link " href="../history.html">History & Speedy Blupi</a>
+<span class="section-title">Architecture</span>
+<a class="nav-link " href="overview.html">System Architecture</a>
+<a class="nav-link active" href="source-files.html">Source Files Reference</a>
+<span class="section-title">Engine Internals</span>
+<a class="nav-link " href="../engine/data-structures.html">Data Structures</a>
+<a class="nav-link " href="../engine/game-phases.html">Game Phases</a>
+<a class="nav-link " href="../engine/rendering.html">Rendering</a>
+<a class="nav-link " href="../engine/pathfinding.html">Pathfinding (A*)</a>
+<a class="nav-link " href="../engine/fog-of-war.html">Fog of War</a>
+<a class="nav-link " href="../engine/minimap.html">Minimap</a>
+<a class="nav-link " href="../engine/demo.html">Demo Recording</a>
+<a class="nav-link " href="../engine/undo.html">Undo System</a>
+<span class="section-title">World (Map)</span>
+<a class="nav-link " href="../world/file-format.html">World File Format</a>
+<a class="nav-link " href="../world/grid.html">World Grid</a>
+<a class="nav-link " href="../world/terrain.html">Terrain & Auto-tiling</a>
+<a class="nav-link " href="../world/objects.html">Object Layer</a>
+<span class="section-title">Characters</span>
+<a class="nav-link " href="../characters/overview.html">Character Overview</a>
+<a class="nav-link " href="../characters/blupi.html">Player (Blupi)</a>
+<a class="nav-link " href="../characters/enemies.html">Enemies</a>
+<a class="nav-link " href="../characters/vehicles.html">Vehicles</a>
+<a class="nav-link " href="../characters/actions.html">ACTION_* Codes</a>
+<a class="nav-link " href="../characters/goals.html">GOAL_* Interpreter</a>
+<span class="section-title">Gameplay</span>
+<a class="nav-link " href="../gameplay/win-conditions.html">Win Conditions</a>
+<a class="nav-link " href="../gameplay/toolbar.html">Toolbar Buttons</a>
+<a class="nav-link " href="../gameplay/directions.html">Directions</a>
+<a class="nav-link " href="../gameplay/skill-levels.html">Skill Levels</a>
+<a class="nav-link " href="../gameplay/regions.html">Regions / Themes</a>
+<a class="nav-link " href="../gameplay/cheat-codes.html">Cheat Codes</a>
+<span class="section-title">Assets</span>
+<a class="nav-link " href="../assets/images.html">Image Assets</a>
+<a class="nav-link " href="../assets/sounds.html">Sound Effects</a>
+<a class="nav-link " href="../assets/music.html">Music Tracks</a>
+<a class="nav-link " href="../assets/data-files.html">Data Files</a>
+<a class="nav-link " href="../assets/movies.html">Movies</a>
+<span class="section-title">User Interface</span>
+<a class="nav-link " href="../ui/messages.html">Windows Messages</a>
+<a class="nav-link " href="../ui/cursor-sprites.html">Cursor Sprites</a>
+<a class="nav-link " href="../ui/statistics.html">Statistics Panel</a>
+<a class="nav-link " href="../ui/error-codes.html">Error Codes</a>
+<span class="section-title">Platforms</span>
+<a class="nav-link " href="../platform/build.html">Build System</a>
+<a class="nav-link " href="../platform/config.html">Configuration</a>
+<a class="nav-link " href="../platform/localisation.html">Localisation</a>
+<a class="nav-link " href="../platform/web.html">Web / Emscripten</a>
+<span class="section-title">Speedy Blupi Reference</span>
+<a class="nav-link " href="../speedy-blupi/overview.html">Relation to Speedy Blupi</a>
+<a class="nav-link " href="../speedy-blupi/actions-h.html">actions.h Reference</a>
+</nav>
+</aside>
+<main id="main">
+  <div class="breadcrumb"><a href="../index.html">Home</a> <span class="sep">/</span> <span>Architecture</span> <span class="sep">/</span> <span>Source Files</span></div>
+  <h1 id="source-files-reference">Source Files Reference</h1>
+<h2 id="header-files-include">Header Files (<code>include/</code>)</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>def.h</code></td>
+<td><strong>Central constants</strong>: window dimensions, image channels, <code>DIRECT_*</code> directions, <code>ACTION_*</code> animation codes, <code>SOUND_*</code> indices, <code>BUTTON_*</code> button IDs, <code>ERROR_*</code> codes, <code>SPRITE_*</code> cursor IDs, <code>WM_*</code> messages, <code>Term</code> struct</td>
+</tr>
+<tr>
+<td><code>decor.h</code></td>
+<td><code>CDecor</code> class; <code>Cellule</code>, <code>Blupi</code>, <code>Move</code> structs; defines MAXBLUPI=100, MAXMOVE=100, MAXENERGY=4000</td>
+</tr>
+<tr>
+<td><code>decgoal.h</code></td>
+<td><code>GOAL_*</code> opcodes (0–49) for the task interpreter; declares <code>GetTableGoal()</code> and <code>table_goal_nbop[]</code></td>
+</tr>
+<tr>
+<td><code>decmove.h</code></td>
+<td>Icon and movement tables for animated decorations; index declarations</td>
+</tr>
+<tr>
+<td><code>action.h</code></td>
+<td>Declaration of <code>CDecor::Action()</code> — per-frame animation step function (not the same as <code>actions.h</code>!)</td>
+</tr>
+<tr>
+<td><code>actions.h</code></td>
+<td><strong>Speedy Blupi legacy</strong>: bytecode opcodes (<code>OPTERM</code>/<code>OPLIST</code>/<code>OPREPEAT</code>/<code>OPSOUND</code>), <code>Action</code>, <code>Objet</code>, <code>Sound</code> enums for the Speedy Blupi engine</td>
+</tr>
+<tr>
+<td><code>button.h</code></td>
+<td><code>CButton</code> class — toolbar button widget</td>
+</tr>
+<tr>
+<td><code>ddutil.h</code></td>
+<td>DirectDraw bitmap utility (MS SDK sample)</td>
+</tr>
+<tr>
+<td><code>event.h</code></td>
+<td><code>CEvent</code> class — phase manager, input routing, demo, buildmode; <code>DemoHeader</code>, <code>DemoEvent</code> structs</td>
+</tr>
+<tr>
+<td><code>fifo.h</code></td>
+<td><code>CPileTriee</code> class — min-heap for A* open list</td>
+</tr>
+<tr>
+<td><code>jauge.h</code></td>
+<td><code>CJauge</code> class — energy/progress gauge widget</td>
+</tr>
+<tr>
+<td><code>menu.h</code></td>
+<td><code>CMenu</code> class — context popup menu widget</td>
+</tr>
+<tr>
+<td><code>misc.h</code></td>
+<td>Utility functions: file paths, random numbers, error reporting</td>
+</tr>
+<tr>
+<td><code>movie.h</code></td>
+<td><code>CMovie</code> class — MCI AVI player</td>
+</tr>
+<tr>
+<td><code>pixmap.h</code></td>
+<td><code>CPixmap</code> class — DirectDraw sprite renderer with channel system</td>
+</tr>
+<tr>
+<td><code>resource.h</code></td>
+<td>String resource IDs (<code>TX_*</code>) for <code>LoadString()</code></td>
+</tr>
+<tr>
+<td><code>resrc1.h</code></td>
+<td>Additional resource IDs</td>
+</tr>
+<tr>
+<td><code>sound.h</code></td>
+<td><code>CSound</code> class — DirectSound + MIDI playback</td>
+</tr>
+<tr>
+<td><code>text.h</code></td>
+<td>Sprite-based text rendering functions</td>
+</tr>
+<tr>
+<td><code>wave.h</code></td>
+<td><code>LoadWave()</code> — load WAV from Win32 resource</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="source-files-src">Source Files (<code>src/</code>)</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose and key functions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>blupi.cpp</code></td>
+<td>Win32 <code>WinMain</code>, <code>WindowProc</code>, global variables, initialisation, timer. Creates CEvent, CDecor, CSound, CPixmap, CMovie.</td>
+</tr>
+<tr>
+<td><code>action.cpp</code></td>
+<td><code>CDecor::Action()</code> — per-frame animation step; sprite and sound tables for each ACTION_* value; maps action+direction → icon sequence.</td>
+</tr>
+<tr>
+<td><code>arrange.cpp</code></td>
+<td>Auto-tiling and flood-fill. <code>ArrangeFloor()</code> adapts floor tiles to neighbours (water, grass, ice). <code>ArrangeMur()</code> and <code>ArrangeBuild()</code> for walls and buildings. <code>ArrangeFill()</code> for flood-fill.</td>
+</tr>
+<tr>
+<td><code>button.cpp</code></td>
+<td><code>CButton::Create()</code>, <code>Paint()</code>, <code>Test()</code> — rendering and click detection for toolbar buttons.</td>
+</tr>
+<tr>
+<td><code>chemin.cpp</code></td>
+<td>A* pathfinding. <code>CheminFillTerrain()</code> builds obstacle bitmap; <code>CheminCherche()</code> runs the search; <code>CheminARebours()</code> reconstructs the path.</td>
+</tr>
+<tr>
+<td><code>ddutil.cpp</code></td>
+<td><code>DDCopyBitmap()</code> etc. — bitmap copy utilities (MS SDK sample). Does not affect game logic.</td>
+</tr>
+<tr>
+<td><code>decblupi.cpp</code></td>
+<td>Largest source file. Complete character lifecycle: <code>BlupiCreate()</code>, <code>BlupiDelete()</code>, <code>BlupiKill()</code>, <code>BlupiNextAction()</code>, <code>BlupiNextGoal()</code>, <code>GoalNextOp()</code>, selection, highlight, pathfinding calls.</td>
+</tr>
+<tr>
+<td><code>decgoal.cpp</code></td>
+<td>Static tables <code>table_goal_*[]</code> — opcode sequences for each of 130+ WM_ACTION_* actions. <code>GetTableGoal()</code> returns a pointer to the table for a given action.</td>
+</tr>
+<tr>
+<td><code>decio.cpp</code></td>
+<td><code>CDecor::Write()</code> — binary write of world state to <code>.blp</code>. <code>CDecor::Read()</code> — binary read. Contains <code>DescFile</code> header struct and <code>OldBlupi</code> (backward compatibility).</td>
+</tr>
+<tr>
+<td><code>decmap.cpp</code></td>
+<td><code>GenerateMap()</code> — creates 128×128 colour minimap image from cell data. <code>MapMove()</code> — minimap click scrolls viewport. <code>ConvCelToMap()</code> / <code>ConvMapToCel()</code> — coordinate conversion.</td>
+</tr>
+<tr>
+<td><code>decmove.cpp</code></td>
+<td><code>MoveCreate()</code> — creates animated decoration. <code>MoveStep()</code> — advances animation one step. <code>MoveFire()</code> / <code>MoveProxiFire()</code> — fire spreading. <code>tableMoves[]</code> and <code>tableIcons[]</code>.</td>
+</tr>
+<tr>
+<td><code>decor.cpp</code></td>
+<td>CDecor core: <code>Create()</code>, <code>Init()</code>, <code>ConvCelToPos()</code>, <code>ConvPosToCel()</code>, <code>PutFloor()</code>, <code>PutObject()</code>, <code>GetFloor()</code>, <code>GetObject()</code>, <code>Build()</code>, <code>BuildGround()</code>, <code>UndoOpen/Close/Copy/Back()</code>.</td>
+</tr>
+<tr>
+<td><code>decstat.cpp</code></td>
+<td><code>StatisticUpdate()</code> — recalculates statistics from world state. <code>StatisticDraw()</code> — renders panel. <code>StatisticDown/Move/Up()</code> — click/hover on statistics panel.</td>
+</tr>
+<tr>
+<td><code>event.cpp</code></td>
+<td><code>CEvent::Create()</code>, <code>ChangePhase()</code>, <code>EventPos()</code>, <code>EventButton()</code>. Phase management, WM_ message routing, demo: <code>DemoRecStart/Stop()</code>, <code>DemoPlayStart()</code>, <code>DemoStep()</code>.</td>
+</tr>
+<tr>
+<td><code>fifo.cpp</code></td>
+<td><code>CPileTriee::put()</code> / <code>get()</code> / <code>remove()</code> — min-heap for A* open list sorted by cumulative cost.</td>
+</tr>
+<tr>
+<td><code>fog.cpp</code></td>
+<td><code>GetFogBits()</code> / <code>GetFogIcon()</code> — fog encoding/decoding (15 icons × 4 quadrants). <code>tableFog[15*4]</code>.</td>
+</tr>
+<tr>
+<td><code>jauge.cpp</code></td>
+<td><code>CJauge::Create()</code>, <code>SetLevel()</code>, <code>Draw()</code> — energy or progress indicator widget.</td>
+</tr>
+<tr>
+<td><code>menu.cpp</code></td>
+<td><code>CMenu::Create()</code>, <code>AdjustPos()</code>, <code>Draw()</code>, <code>Detect()</code> — context menu for selecting an action by clicking on a character.</td>
+</tr>
+<tr>
+<td><code>misc.cpp</code></td>
+<td><code>AddCDPath()</code>, <code>AddUserPath()</code>, <code>GetRandom()</code>, <code>Trace()</code>, <code>DisplayError()</code>.</td>
+</tr>
+<tr>
+<td><code>movie.cpp</code></td>
+<td><code>CMovie::Play()</code>, <code>Stop()</code>, <code>IsOver()</code> — wraps MCI API to play AVI cinematics.</td>
+</tr>
+<tr>
+<td><code>obstacle.cpp</code></td>
+<td><code>tableObstacleFloor[]</code> / <code>tableObstacleObject[]</code> — passability bitmaps. <code>IsFreeCel()</code>, <code>SearchBestBase()</code>, <code>SearchOtherObject()</code>, <code>SearchSpiderObject()</code> etc.</td>
+</tr>
+<tr>
+<td><code>pixmap.cpp</code></td>
+<td><code>CPixmap::Cache()</code> — loads <code>.blp</code> image into a channel. <code>Draw()</code> / <code>DrawIcon()</code> — renders an icon from a channel. <code>DrawSprite()</code> — mouse cursor.</td>
+</tr>
+<tr>
+<td><code>sound.cpp</code></td>
+<td><code>CSound::Cache()</code> — loads PCM WAV. <code>Play()</code>, <code>PlayMusic()</code>, <code>StopMusic()</code>. Wraps DirectSound buffers and MIDI playback.</td>
+</tr>
+<tr>
+<td><code>tablefloor.cpp</code></td>
+<td><code>tableFloor[]</code> — default floor layout for level editor (empty map).</td>
+</tr>
+<tr>
+<td><code>tableobj.cpp</code></td>
+<td><code>tableObj[]</code> — default object layout for level editor.</td>
+</tr>
+<tr>
+<td><code>text.cpp</code></td>
+<td><code>DrawText()</code> / <code>DrawBignum()</code> / <code>DrawLittle()</code> — renders text using sprite-based fonts.</td>
+</tr>
+<tr>
+<td><code>wave.cpp</code></td>
+<td><code>LoadWave()</code> — loads WAV file from resource or filesystem.</td>
+</tr>
+<tr>
+<td><code>web_persistence.cpp</code></td>
+<td><code>PlanetBlupi_ExportPersistentData()</code> / <code>PlanetBlupi_ImportPersistentData()</code> — sync save games with IndexedDB via Emscripten IDBFS.</td>
+</tr>
+</tbody>
+</table>
+</main>
+<script>
+// Highlight active nav link also by current URL
+(function(){
+  var links = document.querySelectorAll('#sidebar a.nav-link');
+  var cur = window.location.pathname.split('/').pop() || 'index.html';
+  links.forEach(function(a){
+    if(a.getAttribute('href').split('/').pop() === cur) a.classList.add('active');
+  });
+})();
+</script>
+</body>
+</html>

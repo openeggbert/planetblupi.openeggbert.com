@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Animation Actions (ACTION_*) — Planet Blupi Docs</title>
+<style>
+
+:root {
+    --bg:        #0d1117;
+    --sidebar-bg:#161b22;
+    --border:    #30363d;
+    --text:      #c9d1d9;
+    --heading:   #e6edf3;
+    --link:      #58a6ff;
+    --link-hover:#79c0ff;
+    --code-bg:   #161b22;
+    --code-text: #f0f6fc;
+    --pre-bg:    #161b22;
+    --table-hd:  #21262d;
+    --table-alt: #161b22;
+    --accent:    #f78166;
+    --sidebar-w: 280px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ── Sidebar ─────────────────────────────────────────── */
+#sidebar {
+    width: var(--sidebar-w);
+    min-width: var(--sidebar-w);
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 0 0 2rem 0;
+    flex-shrink: 0;
+}
+
+#sidebar .logo {
+    display: block;
+    padding: 1rem 1rem 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--heading);
+    letter-spacing: 0.02em;
+}
+#sidebar .logo span { color: var(--accent); }
+
+#sidebar nav { padding: 0.5rem 0; }
+
+#sidebar .section-title {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6e7681;
+    padding: 0.85rem 1rem 0.2rem 1rem;
+}
+
+#sidebar a.nav-link {
+    display: block;
+    padding: 0.28rem 1rem 0.28rem 1.3rem;
+    font-size: 0.83rem;
+    color: #8b949e;
+    text-decoration: none;
+    border-left: 2px solid transparent;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+#sidebar a.nav-link:hover {
+    color: var(--link-hover);
+    background: rgba(88,166,255,0.06);
+    border-left-color: var(--link);
+}
+#sidebar a.nav-link.active {
+    color: var(--link);
+    border-left-color: var(--accent);
+    background: rgba(247,129,102,0.08);
+    font-weight: 600;
+}
+#sidebar a.nav-link.top-link {
+    font-size: 0.85rem;
+    color: #adbac7;
+    padding-left: 1rem;
+    font-weight: 600;
+}
+
+/* ── Main content ────────────────────────────────────── */
+#main {
+    flex: 1;
+    min-width: 0;
+    padding: 2.5rem 3rem 4rem 3rem;
+    max-width: 960px;
+}
+
+/* ── Breadcrumb ──────────────────────────────────────── */
+.breadcrumb {
+    font-size: 0.78rem;
+    color: #6e7681;
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    align-items: center;
+}
+.breadcrumb a { color: var(--link); text-decoration: none; }
+.breadcrumb a:hover { text-decoration: underline; }
+.breadcrumb .sep { color: #6e7681; }
+
+/* ── Typography ──────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--heading);
+    font-weight: 600;
+    line-height: 1.3;
+    margin-top: 1.8em;
+    margin-bottom: 0.6em;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.3em;
+}
+h1 { font-size: 1.9rem; margin-top: 0; }
+h2 { font-size: 1.4rem; }
+h3 { font-size: 1.15rem; border-bottom: none; }
+h4 { font-size: 1rem; border-bottom: none; color: var(--text); }
+
+p { margin: 0.75em 0; }
+
+a { color: var(--link); text-decoration: none; }
+a:hover { text-decoration: underline; color: var(--link-hover); }
+
+ul, ol { padding-left: 1.5em; margin: 0.5em 0; }
+li { margin: 0.25em 0; }
+
+/* ── Code ────────────────────────────────────────────── */
+code {
+    background: var(--code-bg);
+    color: var(--code-text);
+    padding: 0.15em 0.45em;
+    border-radius: 4px;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 0.85em;
+    border: 1px solid var(--border);
+}
+
+pre {
+    background: var(--pre-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1em 1.2em;
+    overflow-x: auto;
+    margin: 1em 0;
+    line-height: 1.55;
+}
+pre code {
+    background: transparent;
+    border: none;
+    padding: 0;
+    font-size: 0.83rem;
+    color: #e6edf3;
+}
+
+/* ── Tables ──────────────────────────────────────────── */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+    font-size: 0.88rem;
+    overflow-x: auto;
+    display: block;
+}
+thead tr { background: var(--table-hd); }
+th {
+    border: 1px solid var(--border);
+    padding: 0.5em 0.85em;
+    text-align: left;
+    color: var(--heading);
+    font-weight: 600;
+    white-space: nowrap;
+}
+td {
+    border: 1px solid var(--border);
+    padding: 0.45em 0.85em;
+    vertical-align: top;
+}
+tbody tr:nth-child(even) { background: var(--table-alt); }
+tbody tr:hover { background: #1c2128; }
+
+/* ── Blockquote ──────────────────────────────────────── */
+blockquote {
+    border-left: 3px solid var(--accent);
+    margin: 1em 0;
+    padding: 0.5em 1em;
+    background: rgba(247,129,102,0.07);
+    border-radius: 0 4px 4px 0;
+    color: #adbac7;
+    font-style: italic;
+}
+
+/* ── HR ──────────────────────────────────────────────── */
+hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2em 0;
+}
+
+/* ── Responsive ──────────────────────────────────────── */
+@media (max-width: 768px) {
+    body { flex-direction: column; }
+    #sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+    #main { padding: 1.5rem 1.2rem 3rem 1.2rem; }
+}
+
+/* ── Scroll ──────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: #30363d; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #484f58; }
+
+</style>
+</head>
+<body>
+<aside id="sidebar">
+  <a class="logo" href="../index.html">
+    <span>&#9679;</span> Planet Blupi Docs
+  </a>
+  <nav>
+<a class="nav-link top-link" href="../index.html">&#8962; Index</a>
+<span class="section-title">Overview</span>
+<a class="nav-link " href="../overview.html">Overview</a>
+<a class="nav-link " href="../history.html">History & Speedy Blupi</a>
+<span class="section-title">Architecture</span>
+<a class="nav-link " href="../architecture/overview.html">System Architecture</a>
+<a class="nav-link " href="../architecture/source-files.html">Source Files Reference</a>
+<span class="section-title">Engine Internals</span>
+<a class="nav-link " href="../engine/data-structures.html">Data Structures</a>
+<a class="nav-link " href="../engine/game-phases.html">Game Phases</a>
+<a class="nav-link " href="../engine/rendering.html">Rendering</a>
+<a class="nav-link " href="../engine/pathfinding.html">Pathfinding (A*)</a>
+<a class="nav-link " href="../engine/fog-of-war.html">Fog of War</a>
+<a class="nav-link " href="../engine/minimap.html">Minimap</a>
+<a class="nav-link " href="../engine/demo.html">Demo Recording</a>
+<a class="nav-link " href="../engine/undo.html">Undo System</a>
+<span class="section-title">World (Map)</span>
+<a class="nav-link " href="../world/file-format.html">World File Format</a>
+<a class="nav-link " href="../world/grid.html">World Grid</a>
+<a class="nav-link " href="../world/terrain.html">Terrain & Auto-tiling</a>
+<a class="nav-link " href="../world/objects.html">Object Layer</a>
+<span class="section-title">Characters</span>
+<a class="nav-link " href="overview.html">Character Overview</a>
+<a class="nav-link " href="blupi.html">Player (Blupi)</a>
+<a class="nav-link " href="enemies.html">Enemies</a>
+<a class="nav-link " href="vehicles.html">Vehicles</a>
+<a class="nav-link active" href="actions.html">ACTION_* Codes</a>
+<a class="nav-link " href="goals.html">GOAL_* Interpreter</a>
+<span class="section-title">Gameplay</span>
+<a class="nav-link " href="../gameplay/win-conditions.html">Win Conditions</a>
+<a class="nav-link " href="../gameplay/toolbar.html">Toolbar Buttons</a>
+<a class="nav-link " href="../gameplay/directions.html">Directions</a>
+<a class="nav-link " href="../gameplay/skill-levels.html">Skill Levels</a>
+<a class="nav-link " href="../gameplay/regions.html">Regions / Themes</a>
+<a class="nav-link " href="../gameplay/cheat-codes.html">Cheat Codes</a>
+<span class="section-title">Assets</span>
+<a class="nav-link " href="../assets/images.html">Image Assets</a>
+<a class="nav-link " href="../assets/sounds.html">Sound Effects</a>
+<a class="nav-link " href="../assets/music.html">Music Tracks</a>
+<a class="nav-link " href="../assets/data-files.html">Data Files</a>
+<a class="nav-link " href="../assets/movies.html">Movies</a>
+<span class="section-title">User Interface</span>
+<a class="nav-link " href="../ui/messages.html">Windows Messages</a>
+<a class="nav-link " href="../ui/cursor-sprites.html">Cursor Sprites</a>
+<a class="nav-link " href="../ui/statistics.html">Statistics Panel</a>
+<a class="nav-link " href="../ui/error-codes.html">Error Codes</a>
+<span class="section-title">Platforms</span>
+<a class="nav-link " href="../platform/build.html">Build System</a>
+<a class="nav-link " href="../platform/config.html">Configuration</a>
+<a class="nav-link " href="../platform/localisation.html">Localisation</a>
+<a class="nav-link " href="../platform/web.html">Web / Emscripten</a>
+<span class="section-title">Speedy Blupi Reference</span>
+<a class="nav-link " href="../speedy-blupi/overview.html">Relation to Speedy Blupi</a>
+<a class="nav-link " href="../speedy-blupi/actions-h.html">actions.h Reference</a>
+</nav>
+</aside>
+<main id="main">
+  <div class="breadcrumb"><a href="../index.html">Home</a> <span class="sep">/</span> <span>Characters</span> <span class="sep">/</span> <span>Actions</span></div>
+  <h1 id="animation-actions-action_">Animation Actions (ACTION_*)</h1>
+<p>All action codes are defined in <code>include/def.h</code>.
+They control the sprite frame sequence played by <code>Action()</code> in <code>action.cpp</code>.</p>
+<p>A character's current animation is stored in <code>Blupi.action</code>.
+The current direction is <code>Blupi.aDirect</code> (a <code>DIRECT_*</code> value).</p>
+<hr />
+<h2 id="blupi-perso0-actions">Blupi (perso=0) Actions</h2>
+<table>
+<thead>
+<tr>
+<th>Constant</th>
+<th>Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ACTION_STOP</code></td>
+<td>0</td>
+<td>Standing still</td>
+</tr>
+<tr>
+<td><code>ACTION_STOPf</code></td>
+<td>1</td>
+<td>Standing still (tired variant)</td>
+</tr>
+<tr>
+<td><code>ACTION_MARCHE</code></td>
+<td>2</td>
+<td>Walking</td>
+</tr>
+<tr>
+<td><code>ACTION_MARCHEf</code></td>
+<td>3</td>
+<td>Walking (tired variant)</td>
+</tr>
+<tr>
+<td><code>ACTION_BUILD</code></td>
+<td>4</td>
+<td>Building / constructing</td>
+</tr>
+<tr>
+<td><code>ACTION_PIOCHE</code></td>
+<td>5</td>
+<td>Mining / digging (pickaxe)</td>
+</tr>
+<tr>
+<td><code>ACTION_ENERGY</code></td>
+<td>6</td>
+<td>Collecting energy (eating/drinking)</td>
+</tr>
+<tr>
+<td><code>ACTION_TAKE</code></td>
+<td>8</td>
+<td>Picking up object and putting it on head</td>
+</tr>
+<tr>
+<td><code>ACTION_DEPOSE</code></td>
+<td>9</td>
+<td>Putting down the carried object</td>
+</tr>
+<tr>
+<td><code>ACTION_SCIE</code></td>
+<td>10</td>
+<td>Sawing wood</td>
+</tr>
+<tr>
+<td><code>ACTION_BRULE</code></td>
+<td>11</td>
+<td>On fire (burning to death)</td>
+</tr>
+<tr>
+<td><code>ACTION_TCHAO</code></td>
+<td>12</td>
+<td>Vanishing / dying (disappear animation)</td>
+</tr>
+<tr>
+<td><code>ACTION_MANGE</code></td>
+<td>13</td>
+<td>Eating</td>
+</tr>
+<tr>
+<td><code>ACTION_NAISSANCE</code></td>
+<td>14</td>
+<td>Being born (hatching from egg)</td>
+</tr>
+<tr>
+<td><code>ACTION_SAUTE2</code></td>
+<td>15</td>
+<td>Jumping over obstacle (phase 2 of 4)</td>
+</tr>
+<tr>
+<td><code>ACTION_SAUTE3</code></td>
+<td>16</td>
+<td>Jumping over obstacle (phase 3)</td>
+</tr>
+<tr>
+<td><code>ACTION_SAUTE4</code></td>
+<td>17</td>
+<td>Jumping over obstacle (phase 4)</td>
+</tr>
+<tr>
+<td><code>ACTION_SAUTE5</code></td>
+<td>18</td>
+<td>Jumping over obstacle (phase 5)</td>
+</tr>
+<tr>
+<td><code>ACTION_PONT</code></td>
+<td>19</td>
+<td>Pushing a bridge segment</td>
+</tr>
+<tr>
+<td><code>ACTION_MISC1</code></td>
+<td>20</td>
+<td>Idle animation: shrugging</td>
+</tr>
+<tr>
+<td><code>ACTION_MISC2</code></td>
+<td>21</td>
+<td>Idle animation: scratching</td>
+</tr>
+<tr>
+<td><code>ACTION_MISC3</code></td>
+<td>22</td>
+<td>Idle animation: yo-yo</td>
+</tr>
+<tr>
+<td><code>ACTION_MISC1f</code></td>
+<td>23</td>
+<td>Idle (tired): bof-bof</td>
+</tr>
+<tr>
+<td><code>ACTION_GLISSE</code></td>
+<td>24</td>
+<td>Sliding on ice</td>
+</tr>
+<tr>
+<td><code>ACTION_BOIT</code></td>
+<td>25</td>
+<td>Drinking a potion</td>
+</tr>
+<tr>
+<td><code>ACTION_LABO</code></td>
+<td>26</td>
+<td>Working in the laboratory</td>
+</tr>
+<tr>
+<td><code>ACTION_DYNAMITE</code></td>
+<td>27</td>
+<td>Setting off dynamite</td>
+</tr>
+<tr>
+<td><code>ACTION_DELAY</code></td>
+<td>28</td>
+<td>Waiting one frame</td>
+</tr>
+<tr>
+<td><code>ACTION_CUEILLE1</code></td>
+<td>29</td>
+<td>Picking flowers (phase 1)</td>
+</tr>
+<tr>
+<td><code>ACTION_CUEILLE2</code></td>
+<td>30</td>
+<td>Picking flowers (phase 2)</td>
+</tr>
+<tr>
+<td><code>ACTION_MECHE</code></td>
+<td>31</td>
+<td>Covering ears (waiting for explosion)</td>
+</tr>
+<tr>
+<td><code>ACTION_STOPb</code></td>
+<td>32</td>
+<td>Standing still in a boat</td>
+</tr>
+<tr>
+<td><code>ACTION_MARCHEb</code></td>
+<td>33</td>
+<td>Moving in a boat</td>
+</tr>
+<tr>
+<td><code>ACTION_STOPj</code></td>
+<td>34</td>
+<td>Standing still in a jeep</td>
+</tr>
+<tr>
+<td><code>ACTION_MARCHEj</code></td>
+<td>35</td>
+<td>Moving in a jeep</td>
+</tr>
+<tr>
+<td><code>ACTION_ELECTRO</code></td>
+<td>36</td>
+<td>Being electrocuted</td>
+</tr>
+<tr>
+<td><code>ACTION_GRILLE1</code></td>
+<td>37</td>
+<td>Being electro-grilled (phase 1)</td>
+</tr>
+<tr>
+<td><code>ACTION_GRILLE2</code></td>
+<td>38</td>
+<td>Being electro-grilled (phase 2)</td>
+</tr>
+<tr>
+<td><code>ACTION_GRILLE3</code></td>
+<td>39</td>
+<td>Being electro-grilled (phase 3)</td>
+</tr>
+<tr>
+<td><code>ACTION_MISC4</code></td>
+<td>40</td>
+<td>Idle: closing eyes</td>
+</tr>
+<tr>
+<td><code>ACTION_CONTENT</code></td>
+<td>41</td>
+<td>Happy dance (mission success)</td>
+</tr>
+<tr>
+<td><code>ACTION_ARROSE</code></td>
+<td>42</td>
+<td>Watering plants</td>
+</tr>
+<tr>
+<td><code>ACTION_BECHE</code></td>
+<td>43</td>
+<td>Digging with a spade</td>
+</tr>
+<tr>
+<td><code>ACTION_CUEILLE3</code></td>
+<td>44</td>
+<td>Picking flowers (phase 3)</td>
+</tr>
+<tr>
+<td><code>ACTION_BUILDBREF</code></td>
+<td>45</td>
+<td>Building (brief variant)</td>
+</tr>
+<tr>
+<td><code>ACTION_BUILDSEC</code></td>
+<td>46</td>
+<td>Building (dry/stone variant)</td>
+</tr>
+<tr>
+<td><code>ACTION_BUILDSOURD</code></td>
+<td>47</td>
+<td>Building (muffled variant)</td>
+</tr>
+<tr>
+<td><code>ACTION_BUILDPIERRE</code></td>
+<td>48</td>
+<td>Building (rock variant)</td>
+</tr>
+<tr>
+<td><code>ACTION_PIOCHEPIERRE</code></td>
+<td>49</td>
+<td>Mining (stone/rock variant)</td>
+</tr>
+<tr>
+<td><code>ACTION_PIOCHESOURD</code></td>
+<td>50</td>
+<td>Mining (muffled variant)</td>
+</tr>
+<tr>
+<td><code>ACTION_MISC5</code></td>
+<td>51</td>
+<td>Idle: waving / calling</td>
+</tr>
+<tr>
+<td><code>ACTION_TELEPORTE1</code></td>
+<td>52</td>
+<td>Teleporter animation (phase 1)</td>
+</tr>
+<tr>
+<td><code>ACTION_TELEPORTE2</code></td>
+<td>53</td>
+<td>Teleporter animation (phase 2)</td>
+</tr>
+<tr>
+<td><code>ACTION_TELEPORTE3</code></td>
+<td>54</td>
+<td>Teleporter animation (phase 3)</td>
+</tr>
+<tr>
+<td><code>ACTION_STOPa</code></td>
+<td>55</td>
+<td>Standing still in armour</td>
+</tr>
+<tr>
+<td><code>ACTION_MARCHEa</code></td>
+<td>56</td>
+<td>Walking in armour</td>
+</tr>
+<tr>
+<td><code>ACTION_ARMUREOPEN</code></td>
+<td>57</td>
+<td>Armour opening (entering)</td>
+</tr>
+<tr>
+<td><code>ACTION_ARMURECLOSE</code></td>
+<td>58</td>
+<td>Armour closing (exiting)</td>
+</tr>
+<tr>
+<td><code>ACTION_SAUTE1</code></td>
+<td>59</td>
+<td>Jumping into a jeep (phase 1)</td>
+</tr>
+<tr>
+<td><code>ACTION_MISC6</code></td>
+<td>60</td>
+<td>Idle: diabolo trick</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="spider-perso1-actions-action_a_">Spider (perso=1) Actions — <code>ACTION_A_*</code></h2>
+<table>
+<thead>
+<tr>
+<th>Constant</th>
+<th>Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ACTION_A_STOP</code></td>
+<td>100</td>
+<td>Standing still</td>
+</tr>
+<tr>
+<td><code>ACTION_A_MARCHE</code></td>
+<td>101</td>
+<td>Walking</td>
+</tr>
+<tr>
+<td><code>ACTION_A_SAUT</code></td>
+<td>102</td>
+<td>Jumping over an obstacle</td>
+</tr>
+<tr>
+<td><code>ACTION_A_GRILLE</code></td>
+<td>103</td>
+<td>Being hit by an electro ray</td>
+</tr>
+<tr>
+<td><code>ACTION_A_POISON</code></td>
+<td>105</td>
+<td>Being poisoned (hit by dynamite)</td>
+</tr>
+<tr>
+<td><code>ACTION_A_MORT1</code></td>
+<td>106</td>
+<td>Death animation (phase 1)</td>
+</tr>
+<tr>
+<td><code>ACTION_A_MORT2</code></td>
+<td>107</td>
+<td>Death animation (phase 2)</td>
+</tr>
+<tr>
+<td><code>ACTION_A_MORT3</code></td>
+<td>108</td>
+<td>Death animation (phase 3)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="virus-perso2-actions-action_v_">Virus (perso=2) Actions — <code>ACTION_V_*</code></h2>
+<table>
+<thead>
+<tr>
+<th>Constant</th>
+<th>Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ACTION_V_STOP</code></td>
+<td>200</td>
+<td>Standing still</td>
+</tr>
+<tr>
+<td><code>ACTION_V_MARCHE</code></td>
+<td>201</td>
+<td>Walking / spreading</td>
+</tr>
+<tr>
+<td><code>ACTION_V_GRILLE</code></td>
+<td>202</td>
+<td>Being hit by an electro ray</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="tracks-tank-perso3-actions-action_t_">Tracks / Tank (perso=3) Actions — <code>ACTION_T_*</code></h2>
+<table>
+<thead>
+<tr>
+<th>Constant</th>
+<th>Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ACTION_T_STOP</code></td>
+<td>300</td>
+<td>Standing still</td>
+</tr>
+<tr>
+<td><code>ACTION_T_MARCHE</code></td>
+<td>301</td>
+<td>Moving (tracks rolling)</td>
+</tr>
+<tr>
+<td><code>ACTION_T_ECRASE</code></td>
+<td>302</td>
+<td>Crushing an object</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="robot-perso4-actions-action_r_">Robot (perso=4) Actions — <code>ACTION_R_*</code></h2>
+<table>
+<thead>
+<tr>
+<th>Constant</th>
+<th>Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ACTION_R_STOP</code></td>
+<td>400</td>
+<td>Standing still</td>
+</tr>
+<tr>
+<td><code>ACTION_R_MARCHE</code></td>
+<td>401</td>
+<td>Walking</td>
+</tr>
+<tr>
+<td><code>ACTION_R_APLAT</code></td>
+<td>402</td>
+<td>Flattening / squashing</td>
+</tr>
+<tr>
+<td><code>ACTION_R_BUILD</code></td>
+<td>403</td>
+<td>Building / working</td>
+</tr>
+<tr>
+<td><code>ACTION_R_DELAY</code></td>
+<td>404</td>
+<td>Waiting (build delay)</td>
+</tr>
+<tr>
+<td><code>ACTION_R_CHARGE</code></td>
+<td>405</td>
+<td>Recharging</td>
+</tr>
+<tr>
+<td><code>ACTION_R_ECRASE</code></td>
+<td>406</td>
+<td>Crushing an object</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="bomb-perso5-actions-action_b_">Bomb (perso=5) Actions — <code>ACTION_B_*</code></h2>
+<table>
+<thead>
+<tr>
+<th>Constant</th>
+<th>Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ACTION_B_STOP</code></td>
+<td>500</td>
+<td>Standing still</td>
+</tr>
+<tr>
+<td><code>ACTION_B_MARCHE</code></td>
+<td>501</td>
+<td>Hopping / bouncing</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="mine-detonator-perso6-actions-action_d_delay">Mine Detonator (perso=6) Actions — <code>ACTION_D_DELAY</code></h2>
+<table>
+<thead>
+<tr>
+<th>Constant</th>
+<th>Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ACTION_D_DELAY</code></td>
+<td>600</td>
+<td>Waiting (invisible, passive)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="electro-tower-perso7-actions-action_e_">Electro Tower (perso=7) Actions — <code>ACTION_E_*</code></h2>
+<table>
+<thead>
+<tr>
+<th>Constant</th>
+<th>Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ACTION_E_STOP</code></td>
+<td>700</td>
+<td>Idle (not firing)</td>
+</tr>
+<tr>
+<td><code>ACTION_E_MARCHE</code></td>
+<td>701</td>
+<td>Rotating / tracking target</td>
+</tr>
+<tr>
+<td><code>ACTION_E_DEBUT</code></td>
+<td>702</td>
+<td>Starting up / powering on</td>
+</tr>
+<tr>
+<td><code>ACTION_E_RAYON</code></td>
+<td>703</td>
+<td>Firing electric ray</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="disciple-robot2-perso8-actions-action_d_">Disciple / Robot2 (perso=8) Actions — <code>ACTION_D_*</code></h2>
+<table>
+<thead>
+<tr>
+<th>Constant</th>
+<th>Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ACTION_D_STOP</code></td>
+<td>800</td>
+<td>Standing still</td>
+</tr>
+<tr>
+<td><code>ACTION_D_MARCHE</code></td>
+<td>801</td>
+<td>Walking</td>
+</tr>
+<tr>
+<td><code>ACTION_D_BUILD</code></td>
+<td>802</td>
+<td>Building / constructing</td>
+</tr>
+<tr>
+<td><code>ACTION_D_PIOCHE</code></td>
+<td>803</td>
+<td>Mining</td>
+</tr>
+<tr>
+<td><code>ACTION_D_SCIE</code></td>
+<td>804</td>
+<td>Sawing wood</td>
+</tr>
+<tr>
+<td><code>ACTION_D_TCHAO</code></td>
+<td>805</td>
+<td>Disappearing / dying</td>
+</tr>
+<tr>
+<td><code>ACTION_D_CUEILLE1</code></td>
+<td>806</td>
+<td>Picking flowers (phase 1)</td>
+</tr>
+<tr>
+<td><code>ACTION_D_CUEILLE2</code></td>
+<td>807</td>
+<td>Picking flowers (phase 2)</td>
+</tr>
+<tr>
+<td><code>ACTION_D_MECHE</code></td>
+<td>808</td>
+<td>Covering ears (dynamite)</td>
+</tr>
+<tr>
+<td><code>ACTION_D_ARROSE</code></td>
+<td>809</td>
+<td>Watering plants</td>
+</tr>
+<tr>
+<td><code>ACTION_D_BECHE</code></td>
+<td>810</td>
+<td>Digging with spade</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="how-action-works-actioncpp">How Action() Works (action.cpp)</h2>
+<p><code>CDecor::Action()</code> is called each tick for each character.</p>
+<p>For each <code>action + aDirect</code> combination, it looks up:
+- A table of sprite icons (from <code>CHBLUPI</code> channel) for each animation frame
+- The animation phase duration (how many ticks per frame)
+- Which sounds to play and when</p>
+<p>It advances <code>Blupi.phase</code> and updates <code>Blupi.icon</code> to the next frame.
+When the animation completes, <code>BlupiNextAction()</code> is called to transition
+to the next state (typically idle <code>ACTION_STOP</code> or next GOAL step).</p>
+</main>
+<script>
+// Highlight active nav link also by current URL
+(function(){
+  var links = document.querySelectorAll('#sidebar a.nav-link');
+  var cur = window.location.pathname.split('/').pop() || 'index.html';
+  links.forEach(function(a){
+    if(a.getAttribute('href').split('/').pop() === cur) a.classList.add('active');
+  });
+})();
+</script>
+</body>
+</html>

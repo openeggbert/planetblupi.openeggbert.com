@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Speedy Blupi — Relationship to Planet Blupi — Planet Blupi Docs</title>
+<style>
+
+:root {
+    --bg:        #0d1117;
+    --sidebar-bg:#161b22;
+    --border:    #30363d;
+    --text:      #c9d1d9;
+    --heading:   #e6edf3;
+    --link:      #58a6ff;
+    --link-hover:#79c0ff;
+    --code-bg:   #161b22;
+    --code-text: #f0f6fc;
+    --pre-bg:    #161b22;
+    --table-hd:  #21262d;
+    --table-alt: #161b22;
+    --accent:    #f78166;
+    --sidebar-w: 280px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ── Sidebar ─────────────────────────────────────────── */
+#sidebar {
+    width: var(--sidebar-w);
+    min-width: var(--sidebar-w);
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 0 0 2rem 0;
+    flex-shrink: 0;
+}
+
+#sidebar .logo {
+    display: block;
+    padding: 1rem 1rem 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--heading);
+    letter-spacing: 0.02em;
+}
+#sidebar .logo span { color: var(--accent); }
+
+#sidebar nav { padding: 0.5rem 0; }
+
+#sidebar .section-title {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6e7681;
+    padding: 0.85rem 1rem 0.2rem 1rem;
+}
+
+#sidebar a.nav-link {
+    display: block;
+    padding: 0.28rem 1rem 0.28rem 1.3rem;
+    font-size: 0.83rem;
+    color: #8b949e;
+    text-decoration: none;
+    border-left: 2px solid transparent;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+#sidebar a.nav-link:hover {
+    color: var(--link-hover);
+    background: rgba(88,166,255,0.06);
+    border-left-color: var(--link);
+}
+#sidebar a.nav-link.active {
+    color: var(--link);
+    border-left-color: var(--accent);
+    background: rgba(247,129,102,0.08);
+    font-weight: 600;
+}
+#sidebar a.nav-link.top-link {
+    font-size: 0.85rem;
+    color: #adbac7;
+    padding-left: 1rem;
+    font-weight: 600;
+}
+
+/* ── Main content ────────────────────────────────────── */
+#main {
+    flex: 1;
+    min-width: 0;
+    padding: 2.5rem 3rem 4rem 3rem;
+    max-width: 960px;
+}
+
+/* ── Breadcrumb ──────────────────────────────────────── */
+.breadcrumb {
+    font-size: 0.78rem;
+    color: #6e7681;
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    align-items: center;
+}
+.breadcrumb a { color: var(--link); text-decoration: none; }
+.breadcrumb a:hover { text-decoration: underline; }
+.breadcrumb .sep { color: #6e7681; }
+
+/* ── Typography ──────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--heading);
+    font-weight: 600;
+    line-height: 1.3;
+    margin-top: 1.8em;
+    margin-bottom: 0.6em;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.3em;
+}
+h1 { font-size: 1.9rem; margin-top: 0; }
+h2 { font-size: 1.4rem; }
+h3 { font-size: 1.15rem; border-bottom: none; }
+h4 { font-size: 1rem; border-bottom: none; color: var(--text); }
+
+p { margin: 0.75em 0; }
+
+a { color: var(--link); text-decoration: none; }
+a:hover { text-decoration: underline; color: var(--link-hover); }
+
+ul, ol { padding-left: 1.5em; margin: 0.5em 0; }
+li { margin: 0.25em 0; }
+
+/* ── Code ────────────────────────────────────────────── */
+code {
+    background: var(--code-bg);
+    color: var(--code-text);
+    padding: 0.15em 0.45em;
+    border-radius: 4px;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 0.85em;
+    border: 1px solid var(--border);
+}
+
+pre {
+    background: var(--pre-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1em 1.2em;
+    overflow-x: auto;
+    margin: 1em 0;
+    line-height: 1.55;
+}
+pre code {
+    background: transparent;
+    border: none;
+    padding: 0;
+    font-size: 0.83rem;
+    color: #e6edf3;
+}
+
+/* ── Tables ──────────────────────────────────────────── */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+    font-size: 0.88rem;
+    overflow-x: auto;
+    display: block;
+}
+thead tr { background: var(--table-hd); }
+th {
+    border: 1px solid var(--border);
+    padding: 0.5em 0.85em;
+    text-align: left;
+    color: var(--heading);
+    font-weight: 600;
+    white-space: nowrap;
+}
+td {
+    border: 1px solid var(--border);
+    padding: 0.45em 0.85em;
+    vertical-align: top;
+}
+tbody tr:nth-child(even) { background: var(--table-alt); }
+tbody tr:hover { background: #1c2128; }
+
+/* ── Blockquote ──────────────────────────────────────── */
+blockquote {
+    border-left: 3px solid var(--accent);
+    margin: 1em 0;
+    padding: 0.5em 1em;
+    background: rgba(247,129,102,0.07);
+    border-radius: 0 4px 4px 0;
+    color: #adbac7;
+    font-style: italic;
+}
+
+/* ── HR ──────────────────────────────────────────────── */
+hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2em 0;
+}
+
+/* ── Responsive ──────────────────────────────────────── */
+@media (max-width: 768px) {
+    body { flex-direction: column; }
+    #sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+    #main { padding: 1.5rem 1.2rem 3rem 1.2rem; }
+}
+
+/* ── Scroll ──────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: #30363d; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #484f58; }
+
+</style>
+</head>
+<body>
+<aside id="sidebar">
+  <a class="logo" href="../index.html">
+    <span>&#9679;</span> Planet Blupi Docs
+  </a>
+  <nav>
+<a class="nav-link top-link" href="../index.html">&#8962; Index</a>
+<span class="section-title">Overview</span>
+<a class="nav-link " href="../overview.html">Overview</a>
+<a class="nav-link " href="../history.html">History & Speedy Blupi</a>
+<span class="section-title">Architecture</span>
+<a class="nav-link " href="../architecture/overview.html">System Architecture</a>
+<a class="nav-link " href="../architecture/source-files.html">Source Files Reference</a>
+<span class="section-title">Engine Internals</span>
+<a class="nav-link " href="../engine/data-structures.html">Data Structures</a>
+<a class="nav-link " href="../engine/game-phases.html">Game Phases</a>
+<a class="nav-link " href="../engine/rendering.html">Rendering</a>
+<a class="nav-link " href="../engine/pathfinding.html">Pathfinding (A*)</a>
+<a class="nav-link " href="../engine/fog-of-war.html">Fog of War</a>
+<a class="nav-link " href="../engine/minimap.html">Minimap</a>
+<a class="nav-link " href="../engine/demo.html">Demo Recording</a>
+<a class="nav-link " href="../engine/undo.html">Undo System</a>
+<span class="section-title">World (Map)</span>
+<a class="nav-link " href="../world/file-format.html">World File Format</a>
+<a class="nav-link " href="../world/grid.html">World Grid</a>
+<a class="nav-link " href="../world/terrain.html">Terrain & Auto-tiling</a>
+<a class="nav-link " href="../world/objects.html">Object Layer</a>
+<span class="section-title">Characters</span>
+<a class="nav-link " href="../characters/overview.html">Character Overview</a>
+<a class="nav-link " href="../characters/blupi.html">Player (Blupi)</a>
+<a class="nav-link " href="../characters/enemies.html">Enemies</a>
+<a class="nav-link " href="../characters/vehicles.html">Vehicles</a>
+<a class="nav-link " href="../characters/actions.html">ACTION_* Codes</a>
+<a class="nav-link " href="../characters/goals.html">GOAL_* Interpreter</a>
+<span class="section-title">Gameplay</span>
+<a class="nav-link " href="../gameplay/win-conditions.html">Win Conditions</a>
+<a class="nav-link " href="../gameplay/toolbar.html">Toolbar Buttons</a>
+<a class="nav-link " href="../gameplay/directions.html">Directions</a>
+<a class="nav-link " href="../gameplay/skill-levels.html">Skill Levels</a>
+<a class="nav-link " href="../gameplay/regions.html">Regions / Themes</a>
+<a class="nav-link " href="../gameplay/cheat-codes.html">Cheat Codes</a>
+<span class="section-title">Assets</span>
+<a class="nav-link " href="../assets/images.html">Image Assets</a>
+<a class="nav-link " href="../assets/sounds.html">Sound Effects</a>
+<a class="nav-link " href="../assets/music.html">Music Tracks</a>
+<a class="nav-link " href="../assets/data-files.html">Data Files</a>
+<a class="nav-link " href="../assets/movies.html">Movies</a>
+<span class="section-title">User Interface</span>
+<a class="nav-link " href="../ui/messages.html">Windows Messages</a>
+<a class="nav-link " href="../ui/cursor-sprites.html">Cursor Sprites</a>
+<a class="nav-link " href="../ui/statistics.html">Statistics Panel</a>
+<a class="nav-link " href="../ui/error-codes.html">Error Codes</a>
+<span class="section-title">Platforms</span>
+<a class="nav-link " href="../platform/build.html">Build System</a>
+<a class="nav-link " href="../platform/config.html">Configuration</a>
+<a class="nav-link " href="../platform/localisation.html">Localisation</a>
+<a class="nav-link " href="../platform/web.html">Web / Emscripten</a>
+<span class="section-title">Speedy Blupi Reference</span>
+<a class="nav-link active" href="overview.html">Relation to Speedy Blupi</a>
+<a class="nav-link " href="actions-h.html">actions.h Reference</a>
+</nav>
+</aside>
+<main id="main">
+  <div class="breadcrumb"><a href="../index.html">Home</a> <span class="sep">/</span> <span>Speedy Blupi</span> <span class="sep">/</span> <span>Overview</span></div>
+  <h1 id="speedy-blupi-relationship-to-planet-blupi">Speedy Blupi — Relationship to Planet Blupi</h1>
+<h2 id="context">Context</h2>
+<p><strong>Speedy Blupi</strong> is a side-scrolling platformer by Epsitec SA (~1995).
+Planet Blupi (1997) was developed by the same team and shares:
+- The Blupi character universe
+- Some header files (most notably <code>actions.h</code>)
+- The Epsitec house style and tools</p>
+<p>This repository (Planet Blupi open-source) contains <code>include/actions.h</code>,
+which is a <strong>direct source-level import from Speedy Blupi's engine</strong>.
+It is not used by Planet Blupi's own code — it exists for reference.</p>
+<hr />
+<h2 id="what-actionsh-contains">What actions.h Contains</h2>
+<p><code>include/actions.h</code> defines three enums and four opcode constants
+from the Speedy Blupi animation bytecode engine:</p>
+<h3 id="bytecode-opcodes">Bytecode Opcodes</h3>
+<pre><code class="language-c">#define OPTERM    0   // end of animation sequence
+#define OPLIST    1   // OPLIST i, D(i)..D(i-1) — list of frames
+#define OPREPEAT  2   // OPREPEAT, n, i, D(i)..D(i-1) — repeated frames
+#define OPSOUND   3   // OPSOUND s — play sound index s
+</code></pre>
+<p>These opcodes form the bytecode language for Speedy Blupi's animation interpreter.
+Each animated character has a sequence of these opcodes describing its sprite frames.</p>
+<h3 id="action-enum-character-animations"><code>Action</code> Enum — Character Animations</h3>
+<p>195+ action codes covering all directional movement and behaviour states.
+Each action has 4 directional variants <code>_E</code> (east), <code>_N</code> (north), <code>_O</code> (west/ouest), <code>_S</code> (south).</p>
+<p>See <a href="actions-h.html">actions.h Full Reference</a> for the complete annotated listing.</p>
+<h3 id="objet-enum-decoration-animations"><code>Objet</code> Enum — Decoration Animations</h3>
+<p>18 states for animated decorations (detonators, bombs, signs, traps, etc.):
+<code>OB_DETONATEURA/B/C</code>, <code>OB_BOMBEA/B/C</code>, <code>OB_SENSUNIO/E/N/S</code>, <code>OB_VITRENS/EO</code>,
+<code>OB_BALLONEX</code>, <code>OB_BAISSE</code>, <code>OB_TELE</code>, <code>OB_UNSEUL</code>, <code>OB_DEPART</code>, <code>OB_TROPBU</code></p>
+<h3 id="sound-enum-speedy-blupi-sfx"><code>Sound</code> Enum — Speedy Blupi SFX</h3>
+<p>39 sound effect identifiers (1–39) plus 16 music indices (101–116).</p>
+<blockquote>
+<p><strong>Important</strong>: These conflict with Planet Blupi's <code>SOUND_*</code> macros in <code>def.h</code>.
+The two systems must not be mixed.</p>
+</blockquote>
+<h3 id="helper-functions">Helper Functions</h3>
+<pre><code class="language-cpp">short* ConvActionToTabIcon(Action action, short typemarche);
+// Returns pointer to sprite frame table for given action and walk type
+
+short* ConvActionToTabMove(Action action);
+// Returns pointer to movement table for given action
+
+short* ConvObjetToTabIcon(Objet objet);
+// Returns pointer to sprite frame table for given decoration state
+</code></pre>
+<hr />
+<h2 id="key-differences-from-planet-blupi-engine">Key Differences from Planet Blupi Engine</h2>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Speedy Blupi</th>
+<th>Planet Blupi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Animation system</td>
+<td>Bytecode interpreter (OPTERM/OPLIST/OPREPEAT/OPSOUND)</td>
+<td>Frame tables in action.cpp</td>
+</tr>
+<tr>
+<td>Character states</td>
+<td><code>Action</code> enum (180+ states with 4 directions each)</td>
+<td><code>ACTION_*</code> macros (60+ states)</td>
+</tr>
+<tr>
+<td>Direction system</td>
+<td>4 directions (<code>_E/_N/_O/_S</code>)</td>
+<td>8 directions (<code>DIRECT_*</code> × 16)</td>
+</tr>
+<tr>
+<td>Object animations</td>
+<td><code>Objet</code> enum (18 states)</td>
+<td><code>Move</code> struct system</td>
+</tr>
+<tr>
+<td>Movement model</td>
+<td>Velocity / physics-based</td>
+<td>Cell-by-cell grid</td>
+</tr>
+<tr>
+<td>Goal system</td>
+<td>State machine automaton</td>
+<td>GOAL_* opcode interpreter</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="using-this-for-decompilation">Using This for Decompilation</h2>
+<p>When reverse-engineering Speedy Blupi:</p>
+<ol>
+<li><strong>Start with <code>actions.h</code></strong> — the <code>Action</code> enum maps directly to animation state IDs</li>
+<li>The bytecode sequence <code>OPTERM/OPLIST/OPREPEAT/OPSOUND</code> appears in binary data tables</li>
+<li>Each <code>Action</code> value is an index into sprite frame and movement tables</li>
+<li><code>ConvActionToTabIcon()</code> and <code>ConvActionToTabMove()</code> resolve an action to its tables</li>
+<li>The <code>Sound</code> enum gives SFX indices (1–39) — note these are <strong>different</strong> from Planet Blupi's SOUND_* values</li>
+<li>Music indices are 101–116 (SOUND_MUSIC11 through SOUND_MUSIC44)</li>
+<li>The <code>Objet</code> enum covers animated scenery/decoration objects (non-character)</li>
+</ol>
+<p>The animation table lookup functions (<code>ConvActionToTabIcon</code> etc.) are the core
+of the Speedy Blupi sprite rendering pipeline and will be present in the binary.</p>
+</main>
+<script>
+// Highlight active nav link also by current URL
+(function(){
+  var links = document.querySelectorAll('#sidebar a.nav-link');
+  var cur = window.location.pathname.split('/').pop() || 'index.html';
+  links.forEach(function(a){
+    if(a.getAttribute('href').split('/').pop() === cur) a.classList.add('active');
+  });
+})();
+</script>
+</body>
+</html>
